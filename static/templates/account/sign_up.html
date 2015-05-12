@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block unauthenticated_content %}
+      
+<form class="form-signup" action="{% url 'account:sign_up' %}" method="post">{% csrf_token %}
+	<h2 class="form-signup-heading">Registration</h2>
+        {% for field in form %}
+		{{ field }}
+	{% endfor %}
+	<button class="btn btn-lg btn-primary btn-block" style="margin-top:10px;" type="submit">Sign Up</button>
+</form>
+
+{% endblock %}
+

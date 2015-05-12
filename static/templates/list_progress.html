@@ -1,0 +1,8 @@
+[{% for entry in entries %}
+{% if forloop.last %}
+{"hash":"{{entry.hash_value}}", "name":"{{entry.name}}", "progress":"{{entry.progress}}"}
+{% else %}
+{"hash":"{{entry.hash_value}}", "name":"{{entry.name}}", "progress":"{{entry.progress}}"},
+{% endif %}
+{% endfor %}]
+

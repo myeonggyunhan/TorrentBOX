@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<script>
+    setInterval(function(){
+        $.ajax({
+            url:'./list_progress',
+            dataType:'json',
+            success:function(data){
+                for(var index in data){
+                        $('#'+data[index].hash).text(data[index].progress+'%');
+                        $('#'+data[index].hash).innerWidth(data[index].progress+'%');
+                }
+            }
+        })
+    },3000)
+</script>
+
+      <div class="container">
+        <p>
+        {% for entry in entries %}
+        {{entry.name}}<br>
+        <div class="progress">
+                <div class="progress-bar" id="{{entry.hash_value}}" role="progressbar" aria-valuenow="{{entry.progress}}" aria-valuemin="0" aria-valuemax="100" style="-webkit-transition-duration: 300ms; transition-duration: 300ms; width: {{entry.progress}}%;">
+                {{entry.progress}}%
+                </div>
+        </div>
+        {% endfor %}
+        </p>
+     </div>
+{% endblock %}

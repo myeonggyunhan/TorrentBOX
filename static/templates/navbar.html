@@ -1,0 +1,53 @@
+
+{% block navbar %}
+      <!-- Static navbar -->
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+            </button>
+            <a class="navbar-brand" href="#">Torrent BOX</a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+		<button type="button" class="btn btn-default" style="margin-top:9px;" data-toggle="modal" data-target="#AddTorrent" aria-label="Left Align">
+  		    Add Torrent &nbsp<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+		</button>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+      </nav>
+
+
+<div class="modal fade" id="AddTorrent" role="dialog" aria-labelledby="gridSystemModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h3 class="modal-title" id="gridSystemModalLabel">Add Torrent</h3>
+        </div>
+        <div class="modal-body">
+          <div class="container-fluid">
+
+            <div class="row">
+		<form class="form-inline" action="/api/add_torrent/" method="post">{% csrf_token %}
+  		<div class="form-group" style="width:90%;">
+		    <div class="input-group" style="width:100%;">
+      			<div class="input-group-addon" style="width:10%;">MODE</div>
+      			<input type="text" class="form-control" id="mode" name="mode" placeholder="url">
+      			<div class="input-group-addon" style="width:10%;">URL</div>
+      			<input type="text" class="form-control" id="url" name="url" placeholder="Input Torrent URL">
+    		    </div>
+  		</div>
+		<button type="submit" class="btn btn-primary">Add</button>
+		</form>
+            </div>
+
+          </div>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+{% endblock %}
