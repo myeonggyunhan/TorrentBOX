@@ -22,7 +22,7 @@
         {% for entry in entries %}
         {{entry.name}}<br>
         <div class="progress">
-                <div class="progress-bar" id="{{entry.hash_value}}" role="progressbar" aria-valuenow="{{entry.progress}}" aria-valuemin="0" aria-valuemax="100" style="-webkit-transition-duration: 300ms; transition-duration: 300ms; width: {{entry.progress}}%;">
+                <div class="progress-bar" id="{{entry.hash_value}}" role="progressbar" aria-valuenow="{{entry.progress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{entry.progress}}%;">
                 {{entry.progress}}%
                 </div>
         </div>
