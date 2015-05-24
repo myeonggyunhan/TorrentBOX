@@ -1,0 +1,13 @@
+requirements
+
+sudo pip install django==1.7.1
+python django Django==1.7.1
+
+sudo pip install django-celery==3.1.18
+celery==3.1.18
+
+python libtorrent
+sudo apt-get install python-libtorrent
+
+
+더 필요한거 정리

@@ -5,28 +5,51 @@
 <script>
     setInterval(function(){
         $.ajax({
-            url:'./list_progress',
+            url:'./api/list_progress',
             dataType:'json',
             success:function(data){
                 for(var index in data){
                         $('#'+data[index].hash).text(data[index].progress+'%');
                         $('#'+data[index].hash).innerWidth(data[index].progress+'%');
-                }
+                        $('#'+data[index].hash + "_status").html("Download rate: " + data[index].download_rate + " (peers: " + data[index].peers +") ["+data[index].downloaded_size+" of "+data[index].file_size+" completed] - " + data[index].rtime + "\n"
+								+ "<a href='./api/delete?torrent_hash=" + data[index].hash + "' class='btn btn-danger' role='button' style='float:right; padding:4px 12px;'>Delete</a>\n"
+								+ "<a href='./api/download?torrent_hash=" + data[index].hash + "' class='btn btn-success' role='button' style='float:right; margin-right:10px; padding:4px 15px;'>Down</a>\n"	
+                	);
+			if (!$('#'+data[index].hash).hasClass('progress-bar')) {
+                        $('#torrent_container').append(
+                                                data[index].name + "<br>\n"
+                                                + "<div class='torrent-progress'>\n"
+                                                +       "<div id='"+data[index].hash+"' class='progress-bar' role='progressbar' aria-valuenow='"+data[index].progress+"' aria-valuemin='0' aria-valuemax='100' style='width: "+data[index].progress+"%;'>\n"
+                                                +       data[index].progress+"%\n"
+                                                +       "</div>\n"
+                                                + "</div>\n"
+                                                + "<p id='"+data[index].hash+"_status'>\n"
+                                                + "Download rate: " + data[index].download_rate + " (peers: " + data[index].peers +") ["+data[index].downloaded_size+" of "+data[index].file_size+" completed] - " + data[index].rtime + "\n"
+                                                + "<a href='./api/delete?torrent_hash=" + data[index].hash + "' class='btn btn-danger' role='button' style='float:right; padding:4px 12px;'>Delete</a>\n"
+                                                + "<a href='./api/download?torrent_hash=" + data[index].hash + "' class='btn btn-success' role='button' style='float:right; margin-right:10px; padding:4px 15px;'>Down</a>\n"
+                                                + "</p>\n");
+			
+			}
+		}
             }
         })
     },3000)
 </script>
 
-      <div class="container">
-        <p>
-        {% for entry in entries %}
+      <div class="container" id="torrent_container">
+        {% for entry in torrent_list %}
         {{entry.name}}<br>
-        <div class="progress">
+        <div class="torrent-progress">
                 <div class="progress-bar" id="{{entry.hash_value}}" role="progressbar" aria-valuenow="{{entry.progress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{entry.progress}}%;">
                 {{entry.progress}}%
                 </div>
         </div>
-        {% endfor %}
-        </p>
+	<p id="{{entry.hash_value}}_status">
+	Download rate: {{entry.download_rate}} (peers: {{entry.peers}}) [{{entry.downloaded_size}} of {{entry.file_size}} completed] - {{entry.rtime}}
+	<a href="./api/delete?torrent_hash={{entry.hash_value}}" class="btn btn-danger" role="button" style="float:right; padding:4px 12px;">Delete</a>	
+	<a href="./api/download?torrent_hash={{entry.hash_value}}" class="btn btn-success" role="button" style="float:right; margin-right:10px; padding:4px 15px;">Down</a>	
+	</p>
+        <br>
+	{% endfor %}
      </div>
 {% endblock %}

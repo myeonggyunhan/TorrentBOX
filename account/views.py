@@ -15,10 +15,8 @@ def sign_in(request):
 	if request.method == 'POST' and form.is_valid():
 		login(request, form.get_user())
 		
-		print "DEBUG:: Login Success"
 		return redirect(next_url)
 
-	print "DEBUG:: Login Fail"
 	return render(request, template, {'form':form, 'next':next_url, })
 
 def sign_up(request):
@@ -33,15 +31,13 @@ def sign_up(request):
 			user = authenticate(username=username, password=password)
 			login(request, user)
 			
-			print "DEBUG:: Sign Up Success"
 			return redirect("/")
 		else:
-			print "DEBUG:: Something wrong 1"
 			return render(request, template, {'form':form, })
 			
-	print "DEBUG:: Something wrong 2"
 	return render(request, template, {'form':form, })
 
+@login_required
 def sign_out(request):
 	logout(request)
 
