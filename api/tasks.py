@@ -65,7 +65,7 @@ def TorrentDownload(username, mode, data):
 		new_entry.downloaded_size=s.total_done
 		new_entry.peers=s.num_peers
 		new_entry.save()
-		time.sleep(3);
+		time.sleep(1);
 
 	# User cancel torrent download during downloading...
 	if download_flag is False:
