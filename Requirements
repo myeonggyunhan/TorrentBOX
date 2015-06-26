@@ -9,5 +9,6 @@ celery==3.1.18
 python libtorrent
 sudo apt-get install python-libtorrent
 
+sudo apt-get install rabbitmq-server
 
 더 필요한거 정리
