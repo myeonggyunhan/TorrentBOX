@@ -8,4 +8,9 @@ Multi-user based 가 핵심인데 이게 잘 안됨, 성능이 너무 안나옴 
 토렌트 업로드 방식 추가해야함
 파일 업로드, 마그넷, URL(already done - little bug exist)
 
+Unit conversion 에 버그 존재함
+시간계산부분, 속도가 아주 느릴때 변환이 잘못되고있음
+
+Gb단위 계산할때 Gb 바이트만 나와서 불편함 세부정보, 즉 메가바이트 단위는 안나옴
+
 
