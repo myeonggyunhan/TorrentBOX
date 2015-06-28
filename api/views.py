@@ -22,15 +22,12 @@ import requests
 @login_required
 def add_torrent(request):
 
-	# TODO: check uniqueness in view... not in task
-	# to prevent high traffic to work queue
+	# TODO: torrent_file is higher priority than url method, is it okay?
 	if request.FILES.has_key('torrent_file') is True:
-		print "DEBUG:: Torrent File upload..."
 		torrent_file = request.FILES['torrent_file']
 		data = torrent_file.read()
 	
 	elif request.POST.has_key('torrent_url') is True:
-		print "DEBUG:: Torrent URL upload..."
 		url = request.POST['torrent_url']
 		response = requests.get(url)
 		data = response.content
@@ -92,7 +89,8 @@ def list_progress(request):
 	
 		if entry.status == "finished":
 			torrent_info['rtime'] = "Finished!"
-       
+      
+		# It does not work... 
 		elif entry.status == "compressing":
 			torrent_info['rtime'] = "Compressing data..."
 	        	
