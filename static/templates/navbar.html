@@ -31,17 +31,13 @@
           <div class="container-fluid">
 
             <div class="row">
-		<form class="form-inline" action="/api/add_torrent/" method="post">{% csrf_token %}
-  		<div class="form-group" style="width:90%;">
-		    <div class="input-group" style="width:100%;">
-      			<div class="input-group-addon" style="width:10%;">MODE</div>
-      			<input type="text" class="form-control" id="mode" name="mode" placeholder="url">
-      			<div class="input-group-addon" style="width:10%;">URL</div>
-      			<input type="text" class="form-control" id="url" name="url" placeholder="Input Torrent URL">
-    		    </div>
-  		</div>
-		<button type="submit" class="btn btn-primary">Add</button>
+		<form enctype="multipart/form-data" action="/api/add_torrent/" method="post">{% csrf_token %}
+      		    <input type="text" class="form-control" id="torrent_url" name="torrent_url" placeholder="Input Torrent URL">
+      		    <br>Or select a torrent file to upload
+		    <input type="file" id="torrent_file" name="torrent_file" style="margin-top:3px;">
+		    <button type="submit" style="float:right;" class="btn btn-primary">Upload</button>
 		</form>
+		<button type="button" class="btn btn-default" data-dismiss="modal" style="float:right; margin-right:7px;">Close</button>
             </div>
 
           </div>

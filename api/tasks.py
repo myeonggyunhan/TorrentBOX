@@ -6,6 +6,8 @@ import sys
 from account.models import Account, TorrentEntries
 from django.contrib.auth.models import User
 from django.conf import settings
+from utils.func import *
+import shutil
 
 TorrentStorage_PATH = settings.DOWNLOAD_DIR
 download_flag=True
@@ -16,10 +18,8 @@ def receive_signal(signum, stack):
 	print "[!] Received exit signal: " + str(signum)
 	download_flag=False
 
-
-
 @celery.task(name='tasks.TorrentDownload')
-def TorrentDownload(username, mode, data):
+def TorrentDownload(account, data):
 	import libtorrent as lt
 	import urllib2
 	import time
@@ -33,25 +33,27 @@ def TorrentDownload(username, mode, data):
 
 	ses = lt.session()
 	ses.listen_on(6881, 6891)
-
-
-	#TODO: Current only support url
-	url = data
-	response = urllib2.urlopen(url)
-	e = lt.bdecode(response.read())
-
+	e = lt.bdecode(data)
 	info = lt.torrent_info(e)
 	info_hash = info.info_hash()
 
+	#TODO: if torrent_entry progress is not 100.0 ?...
+	# instead duplicated download, we have to provide mirror of one 
+	# actually download only one torrent, others just get information of it not download it
+
+	# Add torrent
 	h = ses.add_torrent({'ti': info, 'save_path': TorrentStorage_PATH})
+	
+	# Torrent validation check
 	if h.is_valid() is not True:
 		print "[!] Not valid torrent!"
 		return
 
 	# Save progress and torrent download status into DB
-	u = User.objects.get(username = username)
-	account = Account.objects.get(user=u)
-	new_entry=TorrentEntries(name=str(h.name()), hash_value=str(info_hash), progress=0, download_rate=0, owner=account, file_size=int(h.status().total_wanted), downloaded_size=0, peers=0, status="download", worker_pid=os.getpid())
+	new_entry=TorrentEntries(name=str(h.name()), hash_value=str(info_hash), 
+				progress=0, download_rate=0, owner=account, 
+				file_size=int(h.status().total_wanted), downloaded_size=0, 
+				peers=0, status="download", worker_pid=os.getpid())
 	try:
 		new_entry.save()
 	except:
@@ -67,10 +69,22 @@ def TorrentDownload(username, mode, data):
 		new_entry.save()
 		time.sleep(1);
 
+	filename = TorrentStorage_PATH + "/" + new_entry.name
+
 	# User cancel torrent download during downloading...
 	if download_flag is False:
 		new_entry.delete()
 	else:
+		if os.path.isdir(filename):
+			# make folder to zip file
+			new_entry.status="compressing"
+			new_entry.save()
+			compress_data(TorrentStorage_PATH, new_entry.name)
+			
+			# remove original directory
+			shutil.rmtree(filename)	
+			new_entry.name = new_entry.name + ".zip"
+
 		print "[+] Done: " + str(h.name())
 		new_entry.progress=100
 		new_entry.downloaded_size = new_entry.file_size

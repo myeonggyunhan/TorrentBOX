@@ -1,3 +1,16 @@
+import os
+import zipfile
+
+def compress_data(path, target):
+        # change current working dir
+        os.chdir(path)
+
+        ziph = zipfile.ZipFile(target+".zip", 'w', allowZip64=True)
+        for root, dirs, files in os.walk(target):
+                for file in files:
+                        ziph.write(os.path.join(root, file))
+        ziph.close()
+
 def unitConversion(data, data_type):
         if data_type is "download_rate":
 
@@ -46,4 +59,3 @@ def unitConversion(data, data_type):
                 return time
         else:
                 return "Not Supported"
-
