@@ -5,6 +5,9 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .forms import TorrentBoxCreateForm, TorrentBoxAuthForm
 
+def sign_test(request):
+	template = 'account/test.html'
+	return render(request, template)
 
 def sign_in(request):
 	form = TorrentBoxAuthForm(data = request.POST or None)

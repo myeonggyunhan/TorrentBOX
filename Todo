@@ -13,4 +13,8 @@ Unit conversion 에 버그 존재함
 
 Gb단위 계산할때 Gb 바이트만 나와서 불편함 세부정보, 즉 메가바이트 단위는 안나옴
 
+Template update is done
+새로운 템플릿과 모든 기능을 동기화, html5 drag and drop file upload 기능 추가
+
+detail한 부분 업그레이드 후 필드 테스트 하면 될듯함.
 
