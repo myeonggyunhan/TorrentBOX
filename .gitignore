@@ -2,7 +2,7 @@
 *py[co]
 
 # DB
-*.sqlite3
+*.sqlite3*
 
 # Vim
 .*.sw[op]
