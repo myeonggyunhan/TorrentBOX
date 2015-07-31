@@ -10,6 +10,7 @@ from utils.func import *
 import shutil
 
 TorrentStorage_PATH = settings.DOWNLOAD_DIR
+print TorrentStorage_PATH
 download_flag=True
 
 #TODO: more effecient method?...
@@ -69,20 +70,20 @@ def TorrentDownload(account, data):
 		new_entry.save()
 		time.sleep(1);
 
-	filename = TorrentStorage_PATH + "/" + new_entry.name
+	filePath = os.path.join(TorrentStorage_PATH,new_entry.name)
 
 	# User cancel torrent download during downloading...
 	if download_flag is False:
 		new_entry.delete()
 	else:
-		if os.path.isdir(filename):
+		if os.path.isdir(filePath):
 			# make folder to zip file
 			new_entry.status="compressing"
 			new_entry.save()
 			compress_data(TorrentStorage_PATH, new_entry.name)
 			
 			# remove original directory
-			shutil.rmtree(filename)	
+			shutil.rmtree(filePath)	
 			new_entry.name = new_entry.name + ".zip"
 
 		print "[+] Done: " + str(h.name())

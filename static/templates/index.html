@@ -19,6 +19,9 @@
                                                                  + "<i class='arrow down large black icon'></i>"
                                                                  +  "Download"
                                                                  + "</a>")
+                       if (!$('#'+data[index].hash).hasClass('progress')) {
+                          location.reload(true);
+                       }
                 }
             }
         })
@@ -27,6 +30,9 @@
 
     <!-- Torrent list segments start -->
     <div class="ui segments" id="torrent-segments">
+      <div class="ui segment">
+        <i class="teal refresh icon"></i> DOWNLOADING TORRENTS
+      </div>
 
       {% for entry in torrent_list %}
       <div class="ui segment">
@@ -48,6 +54,18 @@
              Download
            </a>
          </p>
+      </div>
+
+      {% empty %}
+      <div class="ui segment">
+        <div class="ui secondary raised center aligned segment">
+         <br><br>
+         <i class="disabled refresh massive icon"></i>
+         <h3>No active downloads</h3>
+         <p>There are no torrent downloading at the moment.</p>
+         <p>Add torrent to download!</p>
+         <br><br>
+        </div>
       </div>
       {% endfor %}
 

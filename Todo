@@ -14,7 +14,7 @@ Unit conversion 에 버그 존재함
 Gb단위 계산할때 Gb 바이트만 나와서 불편함 세부정보, 즉 메가바이트 단위는 안나옴
 
 Template update is done
-새로운 템플릿과 모든 기능을 동기화, html5 drag and drop file upload 기능 추가 해야함
+새로운 템플릿과 모든 기능을 동기화, html5 drag and drop file upload 기능 추가 해야함 - Complete
 
 사용자에게 Error messgae 보내는 부분 구현해야함, torrent download가 다 끝나지 않았을때 download버튼 누르는 경우도 처리
 

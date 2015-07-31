@@ -6,7 +6,8 @@ from django.shortcuts import render, redirect
 from .forms import TorrentBoxCreateForm, TorrentBoxAuthForm
 
 def sign_test(request):
-	template = 'account/test.html'
+	template = 'test.html'
+	print request.FILES['torrent_file']
 	return render(request, template)
 
 def sign_in(request):

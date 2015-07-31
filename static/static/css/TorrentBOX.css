@@ -31,3 +31,8 @@ div.ui.indicating.progress.active {
 .torrent-right {
  float: right;
 }
+
+.icon-upload > input
+{
+    display: none;
+}

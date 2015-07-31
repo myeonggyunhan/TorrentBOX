@@ -43,7 +43,16 @@ def add_torrent(request):
 	u = User.objects.get(username = request.user.username)
 	account = Account.objects.get(user=u)
 
-	# check uniqueness
+	# If current user have this torrent entry, then nothing todo. redirect to root.
+	# TODO: notice this to user
+	torrent_entry = TorrentEntries.objects.filter(owner=account, hash_value=torrent_hash)
+	if torrent_entry:
+		print "[!] User already have this torrent entry"
+		return redirect("/")
+
+	# Duplication check, if current user doesn't have this torrent entry but torrent file is exist in server
+	# then just update current user's torrent entry and redirect to root.
+	# Since we don't have to re-download same file ( file is already exist in server )
 	torrent_entry = TorrentEntries.objects.filter(hash_value=torrent_hash).first()
 	if torrent_entry and torrent_entry.progress == 100.0:
 		new_entry=TorrentEntries(name=torrent_entry.name, hash_value=torrent_hash,
@@ -86,7 +95,7 @@ def torrent_status(request):
 		torrent_info['downloaded_size'] = unitConversion(entry.downloaded_size, "file")
 
 		if entry.download_rate == 0:
-			torrent_info['rtime'] = "unkown"
+			torrent_info['rtime'] = "unknown"
 		else:
 			rtime = (entry.file_size - entry.downloaded_size) / entry.download_rate
 			torrent_info['rtime'] = unitConversion(rtime, "time")
@@ -117,7 +126,7 @@ def download(request):
 		return redirect("/")
 
 	# To support large file transfer, use limited chunksize and StreamingHttpResponse	
-	filename = settings.DOWNLOAD_DIR + str(entry.name)
+	filename = os.path.join(settings.DOWNLOAD_DIR, str(entry.name))
 	chunk_size = 8192
 	response = StreamingHttpResponse(FileWrapper(open(filename), chunk_size), content_type=mimetypes.guess_type(filename)[0])
 	response['Content-Length'] = os.path.getsize(filename)    
