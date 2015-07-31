@@ -1,16 +1,48 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">
+    <title>Torrent BOX</title>
+    <link rel="stylesheet" href="/static/css/reset.css">
+    <link rel='stylesheet prefetch' href='http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700,900|RobotoDraft:400,100,300,500,700,900'>
+<link rel='stylesheet prefetch' href='http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css'>
 
-{% block unauthenticated_content %}
-      
-<form class="form-signin" action="{% url 'account:sign_in' %}" method="post">{% csrf_token %}
-	<h2 class="form-signin-heading">Please sign in</h2>
-	{% for field in form %}
-	{{ field }}
-	{% endfor %}
-	<label><a href="/account/sign_up">Registration? </label>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-	<input type="hidden" name="next" value="{{ next }}">
-</form>
+        <link rel="stylesheet" href="/static/css/style.css">
+  </head>
+  <body>
+    
+<!-- Form Mixin-->
+<div class="pen-title">
+  <h1>Torrent BOX</h1><span><i class='fa fa-code'></i> by <a href='https://github.com/L34p/TorrentBOX'>l34p</a></span>
+</div>
+<!-- Form Module-->
+<div class="module form-module">
+  <div class="toggle"><i class="fa fa-times fa-pencil"></i>
+    <div class="tooltip">Register</div>
+  </div>
+  <div class="form">
+    <h2>Login to your account</h2>
+    <form method="post" action="{% url 'account:sign_in' %}">{% csrf_token %}
+      {% for field in signin_form %}
+        {{ field }}
+      {% endfor %}
+      <button type="submit">Login</button>
+    </form>
+  </div>
+  <div class="form">
+    <h2>Create an account</h2>
+    <form method="post" action="{% url 'account:sign_up' %}">{% csrf_token %}
+      {% for field in signup_form %}
+        {{ field }}
+      {% endfor %}
+      <button type="submit">Register</button>
+    </form>
+  </div>
+  <div class="cta"><a href="#">Forgot your password?</a></div>
+</div>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+    <script src="/static/js/index.js"></script>
+  </body>
+</html>
 
-{% endblock %}
 

@@ -4,9 +4,9 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import Account 
 
 class TorrentBoxCreateForm(UserCreationForm):
-	username = forms.EmailField(widget=forms.widgets.EmailInput(attrs={'placeholder': 'Email address', 'class':'form-control', 'required': 'true', 'autofocus': 'true'}))
-	password1 = forms.CharField(min_length=3, widget=forms.widgets.PasswordInput(attrs={'placeholder': 'Password', 'class':'form-control', 'required': 'true'}))
-	password2 = forms.CharField(min_length=3, widget=forms.widgets.PasswordInput(attrs={'placeholder': 'Password confirm', 'class':'form-control', 'required': 'true'}))
+	username = forms.EmailField(widget=forms.widgets.EmailInput(attrs={'placeholder': 'Email address', 'required': 'true', 'autofocus': 'true'}))
+	password1 = forms.CharField(min_length=3, widget=forms.widgets.PasswordInput(attrs={'placeholder': 'Password', 'required': 'true'}))
+	password2 = forms.CharField(min_length=3, widget=forms.widgets.PasswordInput(attrs={'placeholder': 'Password confirm', 'required': 'true'}))
 
 	class Meta:
 		model = User
@@ -24,8 +24,8 @@ class TorrentBoxCreateForm(UserCreationForm):
 
 
 class TorrentBoxAuthForm(AuthenticationForm):
-	username = forms.EmailField(widget=forms.widgets.EmailInput(attrs={'placeholder': 'Email address', 'class':'form-control', 'required': 'true', 'autofocus':'true'}))
-	password = forms.CharField(widget=forms.widgets.PasswordInput(attrs={'placeholder': 'Password', 'class':'form-control', 'required': 'true'}))
+	username = forms.EmailField(widget=forms.widgets.EmailInput(attrs={'placeholder': 'Email address', 'required': 'true', 'autofocus':'true'}))
+	password = forms.CharField(widget=forms.widgets.PasswordInput(attrs={'placeholder': 'Password', 'required': 'true'}))
 
 	def is_value(self):
 		form = super(TorrentBoxAuthForm, self).is_valid()

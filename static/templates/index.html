@@ -1,55 +1,54 @@
 {% extends 'base.html' %}
-
 {% block content %}
-
 <script>
     setInterval(function(){
         $.ajax({
-            url:'./api/list_progress',
+            url:'./api/torrent_status',
             dataType:'json',
             success:function(data){
                 for(var index in data){
-                        $('#'+data[index].hash).text(data[index].progress+'%');
-                        $('#'+data[index].hash).innerWidth(data[index].progress+'%');
-                        $('#'+data[index].hash + "_status").html("Download rate: " + data[index].download_rate + " (peers: " + data[index].peers +") ["+data[index].downloaded_size+" of "+data[index].file_size+" completed] - " + data[index].rtime + "\n"
-								+ "<a href='./api/delete?torrent_hash=" + data[index].hash + "' class='btn btn-danger' role='button' style='float:right; padding:4px 12px;'>Delete</a>\n"
-								+ "<a href='./api/download?torrent_hash=" + data[index].hash + "' class='btn btn-success' role='button' style='float:right; margin-right:10px; padding:4px 15px;'>Down</a>\n"	
-                	);
-			if (!$('#'+data[index].hash).hasClass('progress-bar')) {
-                        $('#torrent_container').append(
-                                                data[index].name + "<br>\n"
-                                                + "<div class='torrent-progress'>\n"
-                                                +       "<div id='"+data[index].hash+"' class='progress-bar' role='progressbar' aria-valuenow='"+data[index].progress+"' aria-valuemin='0' aria-valuemax='100' style='width: "+data[index].progress+"%;'>\n"
-                                                +       data[index].progress+"%\n"
-                                                +       "</div>\n"
-                                                + "</div>\n"
-                                                + "<p id='"+data[index].hash+"_status'>\n"
-                                                + "Download rate: " + data[index].download_rate + " (peers: " + data[index].peers +") ["+data[index].downloaded_size+" of "+data[index].file_size+" completed] - " + data[index].rtime + "\n"
-                                                + "<a href='./api/delete?torrent_hash=" + data[index].hash + "' class='btn btn-danger' role='button' style='float:right; padding:4px 12px;'>Delete</a>\n"
-                                                + "<a href='./api/download?torrent_hash=" + data[index].hash + "' class='btn btn-success' role='button' style='float:right; margin-right:10px; padding:4px 15px;'>Down</a>\n"
-                                                + "</p>\n");
-			
-			}
-		}
+                        $('#'+data[index].hash).attr('data-percent', data[index].progress);
+                        $('#'+data[index].hash + "_progress").text(data[index].progress+'%');
+                        $('#'+data[index].hash + "_bar").innerWidth(data[index].progress+'%');
+                        $('#'+data[index].hash + "_status").html( 
+                                                                 "<i class='arrow circle down icon'></i> "+data[index].download_rate+" "
+                                                                 + "<i class='torrent-status download icon'></i> "+data[index].downloaded_size+' / '+data[index].file_size+" "
+                                                                 + "<i class='torrent-status wait icon'></i> Remaining time: "+data[index].rtime+" "
+                                                                 + "<i class='torrent-status info circle icon'></i>Status: Downloading"
+                                                                 + "<a href='./api/download?torrent_hash="+data[index].hash+"'class='ui basic tiny torrent-right button'>"
+                                                                 + "<i class='arrow down large black icon'></i>"
+                                                                 +  "Download"
+                                                                 + "</a>")
+                }
             }
         })
-    },2000)
+    },3500)
 </script>
 
-      <div class="container" id="torrent_container">
-        {% for entry in torrent_list %}
-        {{entry.name}}<br>
-        <div class="torrent-progress">
-                <div class="progress-bar" id="{{entry.hash_value}}" role="progressbar" aria-valuenow="{{entry.progress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{entry.progress}}%;">
-                {{entry.progress}}%
-                </div>
+    <!-- Torrent list segments start -->
+    <div class="ui segments" id="torrent-segments">
+
+      {% for entry in torrent_list %}
+      <div class="ui segment">
+        <h4>{{entry.name}}
+          <a href="./api/delete?torrent_hash={{entry.hash_value}}"><i class="large link black remove icon" style="float: right"></i></a>
+        </h4>
+        <div id="{{entry.hash_value}}" class="ui indicating progress active" data-percent="{{entry.progress}}">
+          <div id="{{entry.hash_value}}_bar" class="bar" style="transition: 300ms; -webkit-transition: 300ms; width: {{entry.progress}}%;"> 
+            <div id="{{entry.hash_value}}_progress" class="progress">{{entry.progress}}%</div>   
+          </div>
         </div>
-	<p id="{{entry.hash_value}}_status">
-	Download rate: {{entry.download_rate}} (peers: {{entry.peers}}) [{{entry.downloaded_size}} of {{entry.file_size}} completed] - {{entry.rtime}}
-	<a href="./api/delete?torrent_hash={{entry.hash_value}}" class="btn btn-danger" role="button" style="float:right; padding:4px 12px;">Delete</a>	
-	<a href="./api/download?torrent_hash={{entry.hash_value}}" class="btn btn-success" role="button" style="float:right; margin-right:10px; padding:4px 15px;">Down</a>	
-	</p>
-        <br>
-	{% endfor %}
-     </div>
+		 <p id="{{entry.hash_value}}_status">
+           <i class="arrow circle down icon"></i> {{entry.download_rate}}
+           <i class="torrent-status download icon"></i> {{entry.downloaded_size}} / {{entry.file_size}}
+           <i class="torrent-status wait icon"></i> Remaining time: {{entry.rtime}}
+           <i class="torrent-status info circle icon"></i>Status: Downloading
+           <a href="./api/download?torrent_hash={{entry.hash_value}}" class="ui basic tiny torrent-right button">
+             <i class="arrow down large black icon"></i>
+             Download
+           </a>
+         </p>
+      </div>
+      {% endfor %}
+
 {% endblock %}
