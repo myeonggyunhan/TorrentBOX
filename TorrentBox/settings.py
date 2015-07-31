@@ -19,7 +19,7 @@ djcelery.setup_loader()
 BROKER_URL = "amqp://guest@127.0.0.1:5672//"
 
 # Torrent Download Directory
-DOWNLOAD_DIR = "/home/leap/Projects/TorrentBOX/static/TorrentStorage/" 
+DOWNLOAD_DIR = os.path.join(BASE_DIR, "static/TorrentStorage")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
