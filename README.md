@@ -1,7 +1,7 @@
 # TorrentBOX
 
 ## Screenshot
-![demo](./img/TorrentBOX_screenshot.png.png)
+![demo](./img/TorrentBOX_screenshot.png)
 
 Multi-user based Torrent download and sharing web service
 
