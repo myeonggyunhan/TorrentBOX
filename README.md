@@ -1,8 +1,11 @@
 # TorrentBOX
 
-Multi-user based Torrent Download and Sharing Web Service
+## Screenshot
+![demo](./img/TorrentBOX_screenshot.png.png)
 
-We need at least two Terminal.
+Multi-user based Torrent download and sharing web service
+
+We need at least two terminal.
 
     python manage.py runserver 0.0.0.0:8000
 
