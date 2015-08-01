@@ -1,10 +1,11 @@
-# TorrentBOX
+Torrent BOX
+===========
+Multi-user based torrent download and sharing web service
 
 ## Screenshot
 ![demo](./img/TorrentBOX_screenshot.png)
 
-Multi-user based Torrent download and sharing web service
-
+## How to use
 We need at least two terminal.
 
     python manage.py runserver 0.0.0.0:8000
