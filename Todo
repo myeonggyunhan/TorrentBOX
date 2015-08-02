@@ -18,5 +18,9 @@ Template update is done
 
 사용자에게 Error messgae 보내는 부분 구현해야함, torrent download가 다 끝나지 않았을때 download버튼 누르는 경우도 처리
 
+celeryd concurrency 몇으로 하는게 좋을지 ...
+concurrency가 부족해서 torrent가 queue에 들어가 있을때 사용자에게 notify
+서버 상황에 따라 적절히 worker를 잘 활용할 필요가 있음, concurrency를 넉넉히 가지고있으면서 scheduling
+
 detail한 부분 업그레이드 후 필드 테스트 하면 될듯함.
 
