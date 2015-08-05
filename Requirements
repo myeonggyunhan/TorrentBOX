@@ -1,14 +1,9 @@
-requirements
+sudo pip install django==1.8.3
+python django Django==1.8.3
 
-sudo pip install django==1.7.1
-python django Django==1.7.1
-
-sudo pip install django-celery==3.1.18
+sudo pip install django-celery
 celery==3.1.18
 
 python libtorrent
 sudo apt-get install python-libtorrent
-
 sudo apt-get install rabbitmq-server
-
-더 필요한거 정리

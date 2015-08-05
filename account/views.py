@@ -9,7 +9,6 @@ def sign_in(request):
 	auth_form = TorrentBoxAuthForm(data = request.POST or None)
 	create_form = TorrentBoxCreateForm(data = request.POST or None) 
 	template = 'account/sign_in.html'
-
 	next_url = request.POST.get("next", "/")
 
 	if request.method == 'POST' and auth_form.is_valid():
@@ -22,6 +21,7 @@ def sign_up(request):
 	auth_form = TorrentBoxAuthForm(data = request.POST or None)
 	create_form = TorrentBoxCreateForm(data = request.POST or None) 
 	template = 'account/sign_in.html'
+	next_url = request.POST.get("next", "/")
 	
 	if request.method == 'POST':
 		if create_form.is_valid():

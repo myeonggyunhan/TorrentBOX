@@ -22,12 +22,18 @@ class TorrentBoxCreateForm(UserCreationForm):
 
 		return user_profile
 
+	def is_valid(self):
+		form = super(TorrentBoxCreateForm, self).is_valid()
+		return form
+		
+	def clean_username(self):
+		return self.cleaned_data.get('username')
+
 
 class TorrentBoxAuthForm(AuthenticationForm):
 	username = forms.EmailField(widget=forms.widgets.EmailInput(attrs={'placeholder': 'Email address', 'required': 'true', 'autofocus':'true'}))
 	password = forms.CharField(widget=forms.widgets.PasswordInput(attrs={'placeholder': 'Password', 'required': 'true'}))
 
-	def is_value(self):
+	def is_valid(self):
 		form = super(TorrentBoxAuthForm, self).is_valid()
-
 		return form
