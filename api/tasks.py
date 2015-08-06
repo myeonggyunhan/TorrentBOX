@@ -54,7 +54,7 @@ def TorrentDownload(account, data):
 	new_entry=TorrentEntries(name=str(h.name()), hash_value=str(info_hash), 
 				progress=0, download_rate=0, owner=account, 
 				file_size=int(h.status().total_wanted), downloaded_size=0, 
-				peers=0, status="download", worker_pid=os.getpid())
+				peers=0, status="initializing", worker_pid=os.getpid())
 	try:
 		new_entry.save()
 	except:
@@ -63,10 +63,11 @@ def TorrentDownload(account, data):
 
 	while (not h.is_seed() and download_flag is True):
 		s = h.status()
-		new_entry.progress=float("%.2f" % (s.progress * 100))
+		new_entry.progress=int("%d" % (s.progress * 100))
 		new_entry.download_rate=s.download_rate
 		new_entry.downloaded_size=s.total_done
 		new_entry.peers=s.num_peers
+		new_entry.status="downloading"
 		new_entry.save()
 		time.sleep(1);
 

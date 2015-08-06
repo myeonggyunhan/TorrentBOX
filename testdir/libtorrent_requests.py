@@ -24,8 +24,9 @@ while (not h.is_seed()):
       (s.progress * 100, s.download_rate / 1000, s.upload_rate / 1000, \
       s.num_peers, state_str[s.state]),
    sys.stdout.flush()
-
-   print "\n[+] total download: " + str(s.total_download)
+   test_progress = s.progress * 100
+   print "\n[+] test progress: %d" % test_progress
+   print "[+] total download: " + str(s.total_download)
    print "[+] total done: " + str(s.total_done)
    print "[+] total wanted done: " + str(s.total_wanted_done)
    print "[+] total wanted: " + str(s.total_wanted)

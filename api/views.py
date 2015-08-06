@@ -54,7 +54,7 @@ def add_torrent(request):
 	# then just update current user's torrent entry and redirect to root.
 	# Since we don't have to re-download same file ( file is already exist in server )
 	torrent_entry = TorrentEntries.objects.filter(hash_value=torrent_hash).first()
-	if torrent_entry and torrent_entry.progress == 100.0:
+	if torrent_entry and torrent_entry.progress == 100:
 		new_entry=TorrentEntries(name=torrent_entry.name, hash_value=torrent_hash,
 					 progress=torrent_entry.progress, 
 					download_rate=torrent_entry.download_rate, 
@@ -89,6 +89,7 @@ def torrent_status(request):
 		torrent_info['name'] = entry.name
 		torrent_info['progress'] = entry.progress
 		torrent_info['peers'] = entry.peers
+		torrent_info['status'] = entry.status
 
 		torrent_info['download_rate'] = unitConversion(entry.download_rate, "download_rate")
 		torrent_info['file_size'] = unitConversion(entry.file_size, "file")
@@ -122,7 +123,7 @@ def download(request):
 
 	# If download is not completed yet, redirect to root
 	# TODO: we have to notice this to user
-	if entry.progress != 100.0:
+	if entry.progress != 100:
 		return redirect("/")
 
 	# To support large file transfer, use limited chunksize and StreamingHttpResponse	
@@ -151,7 +152,7 @@ def delete(request):
 
 	# If progress is 100%, then delete TorrentEntry from user DB
 	# However, we don't delete real file from server
-	if entry.progress == 100.0:
+	if entry.progress == 100:
 		entry.delete()
 
 	# User cancel torrent download during download ...	

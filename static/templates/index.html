@@ -14,7 +14,7 @@
                                                                  "<i class='arrow circle down icon'></i> "+data[index].download_rate+" "
                                                                  + "<i class='torrent-status download icon'></i> "+data[index].downloaded_size+' / '+data[index].file_size+" "
                                                                  + "<i class='torrent-status wait icon'></i> Remaining time: "+data[index].rtime+" "
-                                                                 + "<i class='torrent-status info circle icon'></i>Status: Downloading"
+                                                                 + "<i class='torrent-status info circle icon'></i>Status: "+data[index].status+" "
                                                                  + "<a href='./api/download?torrent_hash="+data[index].hash+"'class='ui basic tiny torrent-right button'>"
                                                                  + "<i class='arrow down large black icon'></i>"
                                                                  +  "Download"
@@ -48,7 +48,7 @@
            <i class="arrow circle down icon"></i> {{entry.download_rate}}
            <i class="torrent-status download icon"></i> {{entry.downloaded_size}} / {{entry.file_size}}
            <i class="torrent-status wait icon"></i> Remaining time: {{entry.rtime}}
-           <i class="torrent-status info circle icon"></i>Status: Downloading
+           <i class="torrent-status info circle icon"></i>Status: {{entry.status}}
            <a href="./api/download?torrent_hash={{entry.hash_value}}" class="ui basic tiny torrent-right button">
              <i class="arrow down large black icon"></i>
              Download
