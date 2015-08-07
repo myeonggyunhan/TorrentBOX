@@ -7,3 +7,7 @@ celery==3.1.18
 python libtorrent
 sudo apt-get install python-libtorrent
 sudo apt-get install rabbitmq-server
+
+
+for centos
+yum install rb_libtorrent-python
