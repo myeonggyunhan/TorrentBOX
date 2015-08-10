@@ -8,6 +8,7 @@ Multi-user based torrent download and sharing web service
 ```bash
 sudo pip install django==1.8.3
 sudo pip install django-celery
+sudo pip install requests
 ```
 For Ubuntu
 ```bash
