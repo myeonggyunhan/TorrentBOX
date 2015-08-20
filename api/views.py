@@ -28,13 +28,13 @@ def add_torrent(request):
 	
 	elif request.POST.has_key('torrent_url') is True:
 		url = request.POST['torrent_url']
-		response = requests.get(url)
+		response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
 		data = response.content
 	else:
-		#TODO: notificate to user, error!
+		#TODO: notify this to user, error!
 		print "DEBUG:: Not supported yet..."
 		return redirect("/")
-
+	
 	e = lt.bdecode(data)
 	info = lt.torrent_info(e)
 	torrent_hash = str(info.info_hash())
