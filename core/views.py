@@ -32,17 +32,13 @@ def home(request):
                 torrent_info['download_rate'] = unitConversion(entry.download_rate, "download_rate")
                 torrent_info['file_size'] = unitConversion(entry.file_size, "file")
                 torrent_info['downloaded_size'] = unitConversion(entry.downloaded_size, "file")
+                torrent_info['status'] = entry.status
 
-
-                if entry.status == "finished":
-                        torrent_info['rtime'] = "Finished!"
-
-                elif entry.download_rate == 0:
-                        torrent_info['rtime'] = "remaining time unknown"
-
+                if entry.download_rate == 0:
+                        torrent_info['rtime'] = "unknown"
                 else:
                         rtime = (entry.file_size - entry.downloaded_size) / entry.download_rate
-                        torrent_info['rtime'] = unitConversion(rtime, "time") + " remaining"
+                        torrent_info['rtime'] = unitConversion(rtime, "time")
 
                 torrent_list.append(dict(torrent_info))
 
