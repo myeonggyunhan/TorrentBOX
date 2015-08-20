@@ -15,7 +15,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # We use celery for background task processing
 import djcelery
 djcelery.setup_loader()
-
 BROKER_URL = "amqp://guest@127.0.0.1:5672//"
 
 # Torrent Download Directory
@@ -29,14 +28,13 @@ SECRET_KEY = '8(gg%tztpz!!8ss*z$ete_ha-@4a74a#&crtdg9bv7dq3p_6c8'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+TEMPLATE_DEBUG = False
 
-TEMPLATE_DEBUG = True
-
-ALLOWED_HOSTS = []
+# This is for test, you have to edit this!
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
-
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
@@ -97,6 +95,12 @@ USE_TZ = True
 STATIC_URL = '/static/'
 LOGIN_URL = '/account/sign_in/'
 LOGOUT_URL = '/account/sign_out/'
+
+# FIXED ISSUE: 404 Not Found error when Debug set to False (https://github.com/L34p/TorrentBOX/issues/2)
+if DEBUG:
+	STATIC_ROOT = os.path.join(BASE_DIR, '/static', 'static')
+else:
+	STATIC_ROOT = os.path.join(BASE_DIR, 'static', 'static')
 
 # Template location
 TEMPLATE_DIRS = (
