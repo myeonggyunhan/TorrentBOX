@@ -10,7 +10,6 @@ from utils.func import *
 import shutil
 
 TorrentStorage_PATH = settings.DOWNLOAD_DIR
-print TorrentStorage_PATH
 download_flag=True
 
 #TODO: more effecient method?...
