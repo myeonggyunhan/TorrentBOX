@@ -18,3 +18,13 @@ class TorrentEntries(models.Model):
 
 	# We can manage TorrentList for each user by using this ForeignKey
 	owner=models.ForeignKey(Account)
+
+# Server store all torrent entry information to prevent duplicated download
+class TorrentGlobalEntries(models.Model):
+	name=models.CharField(max_length=100, null=True)
+	hash_value=models.CharField(max_length=40, null=False)
+	progress=models.PositiveSmallIntegerField(default=0, null=True)
+	file_size=models.BigIntegerField(default=0, null=True)
+	downloaded_size=models.BigIntegerField(default=0, null=True)
+	peers=models.PositiveSmallIntegerField(default=0, null=True)
+	status=models.CharField(max_length=20, null=True)

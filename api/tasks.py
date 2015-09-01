@@ -3,8 +3,9 @@ import signal
 import os
 import time
 import sys
-from account.models import Account, TorrentEntries
+from account.models import Account, TorrentEntries, TorrentGlobalEntries
 from django.contrib.auth.models import User
+from django.contrib import messages
 from django.conf import settings
 from utils.func import *
 import shutil
@@ -15,7 +16,6 @@ download_flag=True
 #TODO: more effecient method?...
 def receive_signal(signum, stack):
 	global download_flag	
-	print "[!] Received exit signal: " + str(signum)
 	download_flag=False
 
 @celery.task(name='tasks.TorrentDownload')
@@ -46,7 +46,7 @@ def TorrentDownload(account, data):
 	
 	# Torrent validation check
 	if h.is_valid() is not True:
-		print "[!] Not valid torrent!"
+		print "[ERROR] Not valid torrent!"
 		return
 
 	# Save progress and torrent download status into DB
@@ -57,7 +57,7 @@ def TorrentDownload(account, data):
 	try:
 		new_entry.save()
 	except:
-		print "[!] Database insert Error"
+		print "[ERROR] Database insert Error"
 		return
 
 	while (not h.is_seed() and download_flag is True):
@@ -86,11 +86,21 @@ def TorrentDownload(account, data):
 			shutil.rmtree(filePath)	
 			new_entry.name = new_entry.name + ".zip"
 
-		print "[+] Done: " + str(h.name())
+		print "[INFO] Done: " + str(h.name())
 		new_entry.progress=100
 		new_entry.downloaded_size = new_entry.file_size
 		new_entry.download_rate = 0
 		new_entry.peers = 0
 		new_entry.status="finished"
 		new_entry.save()
+
+		global_entry=TorrentGlobalEntries(name=new_entry.name,
+						hash_value=new_entry.hash_value,
+						progress=new_entry.progress,
+						file_size=new_entry.file_size,
+						downloaded_size=new_entry.downloaded_size,
+						peers=new_entry.peers,
+						status=new_entry.status)
+		global_entry.save()
+
 

@@ -34,8 +34,10 @@ def home(request):
                 torrent_info['downloaded_size'] = unitConversion(entry.downloaded_size, "file")
                 torrent_info['status'] = entry.status
 
-                if entry.download_rate == 0:
+                if (entry.download_rate == 0) and (entry.status != "finished"):
                         torrent_info['rtime'] = "unknown"
+		elif (entry.download_rate == 0) and (entry.status == "finished"):
+			torrent_info['rtime'] = "0 sec"
                 else:
                         rtime = (entry.file_size - entry.downloaded_size) / entry.download_rate
                         torrent_info['rtime'] = unitConversion(rtime, "time")

@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.shortcuts import render, redirect
 from .forms import TorrentBoxCreateForm, TorrentBoxAuthForm
 
@@ -11,9 +12,13 @@ def sign_in(request):
 	template = 'account/sign_in.html'
 	next_url = request.POST.get("next", "/")
 
-	if request.method == 'POST' and auth_form.is_valid():
-		login(request, auth_form.get_user())
-		return redirect(next_url)
+	if request.method == 'POST':
+		if auth_form.is_valid():
+			login(request, auth_form.get_user())
+			return redirect(next_url)
+		else:
+			messages.error(request, "Incorrect e-mail or password!")
+			return render(request, template, {'signin_form':auth_form, 'signup_form':create_form, 'next':next_url, })
 
 	return render(request, template, {'signin_form':auth_form, 'signup_form':create_form, 'next':next_url, })
 
@@ -33,6 +38,7 @@ def sign_up(request):
 			
 			return redirect("/")
 		else:
+			messages.error(request, "Invalid registration form")
 			return render(request, template, {'signin_form':auth_form, 'signup_form':create_form, 'next':next_url, })
 			
 	return render(request, template, {'signin_form':auth_form, 'signup_form':create_form, 'next':next_url, })
@@ -41,5 +47,4 @@ def sign_up(request):
 @login_required
 def sign_out(request):
 	logout(request)
-
 	return redirect("/")
