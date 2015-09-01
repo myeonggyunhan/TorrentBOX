@@ -1,6 +1,5 @@
 import os
 import zipfile
-
 def compress_data(path, target):
         # change current working dir
         os.chdir(path)
