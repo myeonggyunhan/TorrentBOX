@@ -1,5 +1,6 @@
 import os
 import zipfile
+
 def compress_data(path, target):
         # change current working dir
         os.chdir(path)
@@ -39,7 +40,7 @@ def unitConversion(data, data_type):
                 elif data < 1000000000:
                         file_size = str(data/1000000) + "Mb"
                 else:
-                        file_size = str(data/1000000000) + "Gb"
+			file_size = "%.2fGb" % (float(data)/1000000000)
                 return file_size
 
         elif data_type is "time":
