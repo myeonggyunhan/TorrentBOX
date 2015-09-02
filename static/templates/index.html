@@ -6,31 +6,33 @@
             url:'./api/torrent_status',
             dataType:'json',
             success:function(data){
-                for(var index in data){
-                        $('#'+data[index].hash).attr('data-percent', data[index].progress);
-                        $('#'+data[index].hash + "_progress").text(data[index].progress+'%');
-                        $('#'+data[index].hash + "_bar").innerWidth(data[index].progress+'%');
-                        if (data[index].status != "finished") {
-                          var time_status = "<i class='torrent-status wait icon'></i> Remaining time: "+data[index].rtime+" " ;
-                          var download_button = "";
+               for(var index in data){
+                     if (data[index].status != "queued") {
+                         $('#'+data[index].hash).attr('data-percent', data[index].progress);
+                         $('#'+data[index].hash + "_progress").text(data[index].progress+'%');
+                         $('#'+data[index].hash + "_bar").innerWidth(data[index].progress+'%');
+                         if (data[index].status != "finished") {
+                           var time_status = "<i class='torrent-status wait icon'></i> Remaining time: "+data[index].rtime+" " ;
+                           var download_button = "";
+                         }
+                         else {
+                           var time_status = "" ;
+                           var download_button = "<a href='./api/download?torrent_hash="+data[index].hash+"'class='ui basic tiny torrent-right button'>"
+                                                  + "<i class='arrow down large black icon'></i>"
+                                                  + "Download"
+                                                  + "</a>";
+                         }
+ 
+                         $('#'+data[index].hash + "_status").html( 
+                                                                  "<i class='arrow circle down icon'></i> "+data[index].download_rate+" (peers: "+data[index].peers+") "
+                                                                  + "<i class='torrent-status download icon'></i> "+data[index].downloaded_size+' / '+data[index].file_size+" "
+                                                                  + time_status
+                                                                  + "<i class='torrent-status info circle icon'></i>Status: "+data[index].status+" "
+                                                                  + download_button)
+                        if (!$('#'+data[index].hash).hasClass('progress')) {
+                           location.reload(true);
                         }
-                        else {
-                          var time_status = "" ;
-                          var download_button = "<a href='./api/download?torrent_hash="+data[index].hash+"'class='ui basic tiny torrent-right button'>"
-                                                 + "<i class='arrow down large black icon'></i>"
-                                                 + "Download"
-                                                 + "</a>";
-                        }
-
-                        $('#'+data[index].hash + "_status").html( 
-                                                                 "<i class='arrow circle down icon'></i> "+data[index].download_rate+" (peers: "+data[index].peers+") "
-                                                                 + "<i class='torrent-status download icon'></i> "+data[index].downloaded_size+' / '+data[index].file_size+" "
-                                                                 + time_status
-                                                                 + "<i class='torrent-status info circle icon'></i>Status: "+data[index].status+" "
-                                                                 + download_button)
-                       if (!$('#'+data[index].hash).hasClass('progress')) {
-                          location.reload(true);
-                       }
+                     }
                 }
             }
         })
@@ -44,42 +46,70 @@
       </div>
 
       {% for entry in torrent_list %}
-      <div class="ui segment">
-        <h4>{{entry.name}}
-          <a href="./api/delete?torrent_hash={{entry.hash_value}}"><i class="large link black remove icon" style="float: right"></i></a>
-        </h4>
-        <div id="{{entry.hash_value}}" class="ui indicating progress active" data-percent="{{entry.progress}}">
-          <div id="{{entry.hash_value}}_bar" class="bar" style="transition: 300ms; -webkit-transition: 300ms; width: {{entry.progress}}%;"> 
-            <div id="{{entry.hash_value}}_progress" class="progress">{{entry.progress}}%</div>   
+        {% if entry.status != "queued" %}
+          <div class="ui segment">
+            <h4>{{entry.name}}
+              <a href="./api/delete?torrent_hash={{entry.hash_value}}"><i class="large link black remove icon" style="float: right"></i></a>
+            </h4>
+            <div id="{{entry.hash_value}}" class="ui indicating progress active" data-percent="{{entry.progress}}">
+              <div id="{{entry.hash_value}}_bar" class="bar" style="transition: 300ms; -webkit-transition: 300ms; width: {{entry.progress}}%;"> 
+                <div id="{{entry.hash_value}}_progress" class="progress">{{entry.progress}}%</div>   
+              </div>
+            </div>
+            <p id="{{entry.hash_value}}_status">
+               <i class="arrow circle down icon"></i> {{entry.download_rate}} (peers: {{entry.peers}})
+               <i class="torrent-status download icon"></i> {{entry.downloaded_size}} / {{entry.file_size}}
+               {% if entry.status != "finished" %} 
+                   <i class="torrent-status wait icon"></i> Remaining time: {{entry.rtime}}
+               {% endif %}
+               <i class="torrent-status info circle icon"></i>Status: {{entry.status}}
+               {% if entry.status == "finished" %}
+                  <a href="./api/download?torrent_hash={{entry.hash_value}}" class="ui basic tiny torrent-right button">
+                      <i class="arrow down large black icon"></i>
+                      Download
+                  </a>
+               {% endif %}
+             </p>
           </div>
-        </div>
-		 <p id="{{entry.hash_value}}_status">
-           <i class="arrow circle down icon"></i> {{entry.download_rate}} (peers: {{entry.peers}})
-           <i class="torrent-status download icon"></i> {{entry.downloaded_size}} / {{entry.file_size}}
-          	{% if entry.status != "finished" %} 
-               <i class="torrent-status wait icon"></i> Remaining time: {{entry.rtime}}
-			{% endif %}
-           <i class="torrent-status info circle icon"></i>Status: {{entry.status}}
-            {% if entry.status == "finished" %}
-              <a href="./api/download?torrent_hash={{entry.hash_value}}" class="ui basic tiny torrent-right button">
-                  <i class="arrow down large black icon"></i>
-                  Download
-              </a>
-           {% endif %}
-         </p>
-      </div>
-
+        {% endif %}
       {% empty %}
       <div class="ui segment">
         <div class="ui secondary raised center aligned segment">
          <br><br>
          <i class="disabled refresh massive icon"></i>
          <h3>No active downloads</h3>
-         <p>There are no torrent downloading at the moment.</p>
+         <p>There are no torrents downloading at the moment.</p>
          <p>Add torrent to download!</p>
          <br><br>
         </div>
       </div>
       {% endfor %}
+    </div>
+
+    <div class="ui segments" id="queued-segments">
+      <div class="ui segment">
+         <i class="teal wait icon"></i> WAITING TORRENTS
+      </div>
+    {% for entry in torrent_list %}
+      {% if entry.status == "queued" %}
+          <div class="ui segment">
+            <div class="ui left corner label"><i class="icon"><h4>{{entry.priority}}</h4></i></div>
+            <span style="font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;line-height: 1.2857em;font-weight: 700;padding: 0;margin-left: 30px;">{{entry.name}}</span>
+          </div>
+
+      {% endif %}
+      {% empty %}
+      <div class="ui segment">
+        <div class="ui secondary raised center aligned segment">
+         <br><br>
+         <i class="disabled wait massive icon"></i>
+         <h3>No files in queue</h3>
+         <p>There are no torrents in queue.</p>
+         <p>You can download torrent immediately!</p>
+         <br><br>
+        </div>
+      </div>
+    {% endfor %}
+    </div>
 
 {% endblock %}

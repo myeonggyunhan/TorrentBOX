@@ -20,8 +20,8 @@ def home(request):
 	except:
 		entries = None
 
-        torrent_list = []
-        torrent_info = {}
+        torrent_list = list()
+        torrent_info = dict()
 
         for entry in entries:
                 torrent_info['hash_value'] = entry.hash_value
@@ -33,6 +33,7 @@ def home(request):
                 torrent_info['file_size'] = unitConversion(entry.file_size, "file")
                 torrent_info['downloaded_size'] = unitConversion(entry.downloaded_size, "file")
                 torrent_info['status'] = entry.status
+		torrent_info['priority'] = entry.priority
 
                 if (entry.download_rate == 0) and (entry.status != "finished"):
                         torrent_info['rtime'] = "unknown"

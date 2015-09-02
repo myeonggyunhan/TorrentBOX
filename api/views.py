@@ -2,6 +2,8 @@ from django.shortcuts import HttpResponse, render, render_to_response, RequestCo
 from django.contrib.auth.decorators import login_required
 from account.models import Account, TorrentEntries
 
+from celery.task.control import inspect
+
 import mimetypes
 from django.http import StreamingHttpResponse
 from django.core.servers.basehttp import FileWrapper
@@ -39,6 +41,7 @@ def add_torrent(request):
 			messages.error(request, "Invalid torrent URL! Please check your torrent URL")
 			return redirect("/")
 
+		# TODO: SSL error occur, we have to fix it.
 		response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
 		data = response.content
 	else:
@@ -59,7 +62,6 @@ def add_torrent(request):
 	account = Account.objects.get(user=u)
 
 	# If current user have this torrent entry, then nothing todo. redirect to root.
-	# TODO: notice this to user
 	torrent_entry = TorrentEntries.objects.filter(owner=account, hash_value=torrent_hash)
 	if torrent_entry:
 		messages.error(request, "You already have this torrent")
@@ -67,22 +69,48 @@ def add_torrent(request):
 
 	#TODO: Try download same torrent more than two user at the same time
 	# instead of duplicated downloading, we have to provide mirror of one
-	# actually download only one torrent, others just get information of it not download it
+	# actually download only one torrent, others just get information of it. Not download it
 
 	# Duplication check, if current user doesn't have this torrent entry but torrent file exist in server
-	# then just update current user's torrent entry and redirect to root.
+	# then just update current user's torrent entry and redirect to root. (this save worker thread)
 	# Since we don't have to re-download same file (file is already exist in server)
-	torrent_entry = TorrentEntries.objects.filter(hash_value=torrent_hash).first()
+	torrent_entry = TorrentGlobalEntries.objects.filter(hash_value=torrent_hash).first()
 	if torrent_entry and torrent_entry.progress == 100:
-		new_entry=TorrentEntries(name=torrent_entry.name, hash_value=torrent_entry.hash_value,
-					 progress=torrent_entry.progress, 
-					download_rate=torrent_entry.download_rate, 
-					owner=account,
-                                       	file_size=torrent_entry.file_size, 
-					downloaded_size=torrent_entry.downloaded_size, 
-					peers=torrent_entry.peers,
-                                       	status=torrent_entry.status)
+		new_entry=TorrentEntries(name = torrent_entry.name,
+					hash_value = torrent_entry.hash_value,
+					progress = torrent_entry.progress, 
+					download_rate = 0, 
+					owner = account,
+                                       	file_size = torrent_entry.file_size, 
+					downloaded_size = torrent_entry.downloaded_size, 
+					peers = torrent_entry.peers,
+                                       	status = torrent_entry.status)
 		new_entry.save()
+		return redirect("/")
+
+	# Calculate the number of waiting torrents in queue
+	# TODO: If more than one celery, it calculates wrong number.
+	i = inspect()
+	r = i.reserved()
+	waitings=len(r[r.keys()[0]])
+	waitings+=1	
+	
+	# Initialize new user torrent entry. status must be initialized with queued.
+	new_entry=TorrentEntries(name = str(info.name()), 
+				hash_value = str(torrent_hash),
+				progress = 0,
+				download_rate = 0,
+				owner = account,
+				file_size = int(info.total_size()),
+				downloaded_size = 0,
+				peers = 0, 
+				status = "queued",
+				priority = waitings)
+
+	try:
+		new_entry.save()
+	except:
+		messages.error(request, "Database insert error! Please notice this to admin")
 		return redirect("/")
 	
 	# Background torrent download	
@@ -99,8 +127,8 @@ def torrent_status(request):
 	except:
 		entries = None
 	
-	torrent_list = []
-	torrent_info = {}
+	torrent_list = list()
+	torrent_info = dict()
 
 	for entry in entries:
 		torrent_info['hash_value'] = entry.hash_value
@@ -144,7 +172,6 @@ def download(request):
 		return redirect("/")
 
 	# If download is not completed yet, redirect to root
-	# TODO: we have to notice this to user
 	if entry.progress != 100:
 		messages.error(request, "You can't download file while torrent downloading.")
 		return redirect("/")
