@@ -1,8 +1,8 @@
 [{% for entry in torrent_list %}
 {% if forloop.last %}
-{"hash":"{{entry.hash_value}}", "name":"{{entry.name}}", "progress":"{{entry.progress}}", "download_rate":"{{entry.download_rate}}", "file_size":"{{entry.file_size}}", "downloaded_size":"{{entry.downloaded_size}}", "rtime":"{{entry.rtime}}", "peers":"{{entry.peers}}", "status":"{{entry.status}}"}
+{"hash":"{{entry.hash_value}}", "name":"{{entry.name}}", "progress":"{{entry.progress}}", "download_rate":"{{entry.download_rate}}", "file_size":"{{entry.file_size}}", "downloaded_size":"{{entry.downloaded_size}}", "rtime":"{{entry.rtime}}", "peers":"{{entry.peers}}", "status":"{{entry.status}}", "priority":"{{entry.priority}}"}
 {% else %}
-{"hash":"{{entry.hash_value}}", "name":"{{entry.name}}", "progress":"{{entry.progress}}", "download_rate":"{{entry.download_rate}}", "file_size":"{{entry.file_size}}", "downloaded_size":"{{entry.downloaded_size}}", "rtime":"{{entry.rtime}}", "peers":"{{entry.peers}}", "status":"{{entry.status}}"},
+{"hash":"{{entry.hash_value}}", "name":"{{entry.name}}", "progress":"{{entry.progress}}", "download_rate":"{{entry.download_rate}}", "file_size":"{{entry.file_size}}", "downloaded_size":"{{entry.downloaded_size}}", "rtime":"{{entry.rtime}}", "peers":"{{entry.peers}}", "status":"{{entry.status}}", "priority":"{{entry.priority}}"},
 {% endif %}
 {% endfor %}]
 

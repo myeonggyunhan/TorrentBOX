@@ -20,6 +20,19 @@ BROKER_URL = "amqp://guest@127.0.0.1:5672//"
 # Torrent Download Directory
 DOWNLOAD_DIR = os.path.join(BASE_DIR, "static", "TorrentStorage")
 
+
+## TorrentBOX eviction rule
+
+# If current downloading torrent's speed keep less than evictionTimeBound for timeout second 
+# and there exist pending torrent on queue, then we evict it.
+# unit is sec
+TIMEOUT = 300 # 300sec 
+
+# unit is bit
+EVICTION_SPEED = 200000 # 200Kb, kilobit
+
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 

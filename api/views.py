@@ -24,6 +24,7 @@ import signal
 		
 import libtorrent as lt
 import requests
+import time
 
 @login_required
 def add_torrent(request):
@@ -74,8 +75,8 @@ def add_torrent(request):
 	# Duplication check, if current user doesn't have this torrent entry but torrent file exist in server
 	# then just update current user's torrent entry and redirect to root. (this save worker thread)
 	# Since we don't have to re-download same file (file is already exist in server)
-	torrent_entry = TorrentGlobalEntries.objects.filter(hash_value=torrent_hash).first()
-	if torrent_entry and torrent_entry.progress == 100:
+	torrent_entry = TorrentGlobalEntries.objects.filter(hash_value=torrent_hash, status="finished").first()
+	if torrent_entry:
 		new_entry=TorrentEntries(name = torrent_entry.name,
 					hash_value = torrent_entry.hash_value,
 					progress = torrent_entry.progress, 
@@ -89,10 +90,7 @@ def add_torrent(request):
 		return redirect("/")
 
 	# Calculate the number of waiting torrents in queue
-	# TODO: If more than one celery, it calculates wrong number.
-	i = inspect()
-	r = i.reserved()
-	waitings=len(r[r.keys()[0]])
+	waitings=TorrentEntries.objects.filter(status="queued").count()
 	waitings+=1	
 	
 	# Initialize new user torrent entry. status must be initialized with queued.
@@ -112,7 +110,7 @@ def add_torrent(request):
 	except:
 		messages.error(request, "Database insert error! Please notice this to admin")
 		return redirect("/")
-	
+
 	# Background torrent download	
 	tasks.TorrentDownload.delay(account, data)
 	return redirect("/")
@@ -131,25 +129,27 @@ def torrent_status(request):
 	torrent_info = dict()
 
 	for entry in entries:
-		torrent_info['hash_value'] = entry.hash_value
-		torrent_info['name'] = entry.name
-		torrent_info['progress'] = entry.progress
-		torrent_info['peers'] = entry.peers
-		torrent_info['status'] = entry.status
+		if entry.status != "terminated":
+			torrent_info['hash_value'] = entry.hash_value
+			torrent_info['name'] = entry.name
+			torrent_info['progress'] = entry.progress
+			torrent_info['peers'] = entry.peers
+			torrent_info['status'] = entry.status
+			torrent_info['priority'] = entry.priority
 
-		torrent_info['download_rate'] = unitConversion(entry.download_rate, "download_rate")
-		torrent_info['file_size'] = unitConversion(entry.file_size, "file")
-		torrent_info['downloaded_size'] = unitConversion(entry.downloaded_size, "file")
+			torrent_info['download_rate'] = unitConversion(entry.download_rate, "download_rate")
+			torrent_info['file_size'] = unitConversion(entry.file_size, "file")
+			torrent_info['downloaded_size'] = unitConversion(entry.downloaded_size, "file")
 
-		if (entry.download_rate == 0) and (entry.status != "finished"):
-			torrent_info['rtime'] = "unknown"
-		elif (entry.download_rate == 0) and (entry.status == "finished"):
-			torrent_info['rtime'] = "0 sec"
-		else:
-			rtime = (entry.file_size - entry.downloaded_size) / entry.download_rate
-			torrent_info['rtime'] = unitConversion(rtime, "time")
+			if (entry.download_rate == 0) and (entry.status != "finished"):
+				torrent_info['rtime'] = "unknown"
+			elif (entry.download_rate == 0) and (entry.status == "finished"):
+				torrent_info['rtime'] = "0 sec"
+			else:
+				rtime = (entry.file_size - entry.downloaded_size) / entry.download_rate
+				torrent_info['rtime'] = unitConversion(rtime, "time")
 
-		torrent_list.append(dict(torrent_info))
+			torrent_list.append(dict(torrent_info))
 
 	return render_to_response("torrent_status.html", locals(), context_instance=RequestContext(request))
 
@@ -172,8 +172,8 @@ def download(request):
 		return redirect("/")
 
 	# If download is not completed yet, redirect to root
-	if entry.progress != 100:
-		messages.error(request, "You can't download file while torrent downloading.")
+	if entry.status != "finished":
+		messages.error(request, "You can't download file until finished")
 		return redirect("/")
 
 	# To support large file transfer, use limited chunksize and StreamingHttpResponse	
@@ -202,13 +202,29 @@ def delete(request):
 		messages.error(request, "You don't have this torrent! Please add it first")
 		return redirect("/")
 
-	# If progress is 100%, then delete TorrentEntry from user DB
-	# However, we don't delete real file from server
-	if entry.progress == 100:
+	if entry.status == "compressing":
+		messages.error(request, "You can't remove torrent during compressing")
+		return redirect("/")
+
+	# Delete user's torrent entry. But, we don't delete real file from server.
+	elif entry.status == "finished":
 		entry.delete()
 
-	# User cancel torrent download during download ...	
-	else:
+	# User cancel downloading torrent	
+	elif entry.status == "downloading":
 		os.kill(entry.worker_pid, signal.SIGINT)
+
+	# We have to handle queued status
+	elif entry.status == "queued":
+		# Change status to terminated
+		entry.status = "terminated"
+		entry.save()
+
+		# Update queued torrent's priority
+		queued_entries = TorrentEntries.objects.filter(status="queued")
+		for entry in queued_entries:
+			if entry.priority != 0:
+				entry.priority -= 1
+				entry.save()
 
 	return redirect("/")
