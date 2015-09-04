@@ -1,6 +1,4 @@
 """
-Django settings for TorrentBox project.
-
 For more information on this file, see
 https://docs.djangoproject.com/en/1.7/topics/settings/
 
@@ -13,9 +11,13 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # We use celery for background task processing
+BROKER_URL = "amqp://guest@127.0.0.1:5672//"
+
+# List of modules to import when celery starts.
+INSTALLED_APPS = ['TorrentBOX.api']
+CELERY_IMPORTS = ('api.tasks', )
 import djcelery
 djcelery.setup_loader()
-BROKER_URL = "amqp://guest@127.0.0.1:5672//"
 
 # Torrent Download Directory
 DOWNLOAD_DIR = os.path.join(BASE_DIR, "static", "TorrentStorage")
@@ -72,18 +74,29 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'TorrentBox.urls'
+ROOT_URLCONF = 'TorrentBOX.urls'
 
-WSGI_APPLICATION = 'TorrentBox.wsgi.application'
+WSGI_APPLICATION = 'TorrentBOX.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
-
+'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+'''
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'torrentbox',
+	'USER': 'torrentboxdb',
+	'PASSWORD': 't0rr3ntb@xdb#!',
+	'HOST': 'localhost',
+	'PORT': '',
     }
 }
 DATABASE_OPTIONS = {'charset': 'utf8'}

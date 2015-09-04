@@ -3,7 +3,6 @@ from django.contrib.auth.decorators import login_required
 from account.models import Account, TorrentEntries
 
 from celery.task.control import inspect
-
 import mimetypes
 from django.http import StreamingHttpResponse
 from django.core.servers.basehttp import FileWrapper
@@ -18,7 +17,8 @@ from account.models import Account, TorrentEntries, TorrentGlobalEntries
 from django.conf import settings
 from utils.func import *
 from time import sleep
-from api import tasks
+
+from api.tasks import TorrentDownload
 import os
 import signal
 		
@@ -112,7 +112,7 @@ def add_torrent(request):
 		return redirect("/")
 
 	# Background torrent download	
-	tasks.TorrentDownload.delay(account, data)
+	TorrentDownload.delay(account, data)
 	return redirect("/")
 
 
@@ -181,7 +181,7 @@ def download(request):
 	chunk_size = 8192
 	response = StreamingHttpResponse(FileWrapper(open(filename), chunk_size), content_type=mimetypes.guess_type(filename)[0])
 	response['Content-Length'] = os.path.getsize(filename)    
-	response['Content-Disposition'] = "attachment; filename=%s" % str(entry.name)
+	response['Content-Disposition'] = "attachment; filename=\"%s\"" % str(entry.name)
 	return response
 
 @login_required
