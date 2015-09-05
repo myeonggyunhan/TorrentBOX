@@ -176,8 +176,9 @@ def download(request):
 		messages.error(request, "You can't download file until finished")
 		return redirect("/")
 
-	# To support large file transfer, use limited chunksize and StreamingHttpResponse	
-	filename = os.path.join(settings.DOWNLOAD_DIR, str(entry.name))
+	# To support large file transfer, use limited chunksize and StreamingHttpResponse
+	entry.name = (entry.name).encode('utf8')
+	filename = os.path.join(settings.DOWNLOAD_DIR, entry.name)
 	chunk_size = 8192
 	response = StreamingHttpResponse(FileWrapper(open(filename), chunk_size), content_type=mimetypes.guess_type(filename)[0])
 	response['Content-Length'] = os.path.getsize(filename)    
