@@ -1,5 +1,5 @@
 # Torrent BOX
-Multi-user based torrent download and sharing web service
+Multi-user based torrent download and sharing Django application
 
 ## Screenshot
 ![demo](./img/TorrentBOX_screenshot.png)
