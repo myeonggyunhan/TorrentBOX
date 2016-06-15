@@ -3,7 +3,7 @@
 <script>
     setInterval(function(){
         $.ajax({
-            url:'./api/torrent_status',
+            url:'./api/torrent_status/',
             dataType:'json',
             success:function(data){
                for(var index in data){
