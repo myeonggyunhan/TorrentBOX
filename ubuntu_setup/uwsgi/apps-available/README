@@ -1,6 +1,0 @@
-This is staging directory for uWSGI configuration files.
-
-You should place configuration files here and create soft links to them in
-/etc/uwsgi/apps-enabled directory.
-
-See also /etc/uwsgi/apps-enabled/README.

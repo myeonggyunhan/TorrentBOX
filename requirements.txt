@@ -1,9 +1,0 @@
-Django==1.8.3
-amqp==1.4.6
-anyjson==0.3.3
-billiard==3.3.0.20
-celery==3.1.18
-django-celery==3.1.16
-kombu==3.0.26
-pytz==2015.4
-wsgiref==0.1.2

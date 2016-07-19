@@ -1,5 +1,0 @@
-Tested Envirionment: Ubuntu 14.04.03 
-
-PostgreSQL: https://www.digitalocean.com/community/tutorials/how-to-use-postgresql-with-your-django-application-on-ubuntu-14-04
-nginx, uwsgi: http://codingdojang.com/scode/364
-
