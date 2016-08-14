@@ -13,6 +13,14 @@ PROJECT_PACKAGE = Path(__file__).resolve().parent
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+TORRENT_STORAGE = str(PROJECT_PACKAGE.joinpath('storage'))
+BROKER_URL = "amqp://guest@127.0.0.1:5672//"
+CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
+CELERY_TASK_SERIALIZER = 'pickle'
+CELERY_RESULT_SERIALIZER = 'pickle'
+CELERY_ACCEPT_CONTENT=['pickle']
+CELERY_TIMEZONE = 'Asia/Seoul'
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'e&pyvchx^crhx$x04zw*1tav*+z+&lhrmm55lyeg#30z3_3_4m'
 
@@ -26,6 +34,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'torrent',
+    'accounts',
     'djcelery',
 
     'django.contrib.admin',
@@ -81,7 +90,7 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
-
+'''
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -96,6 +105,10 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+'''
+AUTH_PASSWORD_VALIDATORS = [
+]
+
 
 
 # Internationalization
@@ -111,6 +124,10 @@ USE_L10N = True
 
 USE_TZ = True
 
+# Accounts setting
+
+LOGIN_URL = '/accounts/sign_in/'
+LOGOUT_URL = '/accounts/sign_out/'
 
 # Static files (CSS, JavaScript, Images)
 

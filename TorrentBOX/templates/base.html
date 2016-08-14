@@ -22,7 +22,11 @@
     margin-right: 1.5em;
   }
   .main.container {
-    margin-top: 3.5em;
+    margin-top: 3.0em;
+  }
+  .icon-upload > input
+  {
+      display: none;
   }
   </style>
 
@@ -56,7 +60,7 @@
 		}
  
         function sendFile(file) {
-            var uri = "/api/add_torrent/";
+            var uri = "{% url 'torrent:add' %}";
             var xhr = new XMLHttpRequest();
             var fd = new FormData();
 			var csrftoken = getCookie('csrftoken');
@@ -114,15 +118,14 @@
   <div class="ui fixed inverted menu">
     <div class="ui container">
       <div href="#" class="header item">
-        <img class="logo" src="/static/assets/helveticaT.png">
         <a href="/">TorrentBOX</a>
       </div>
 
 	    <div class="ui right simple dropdown item">
 		   <i class="inverted user large icon" style="margin-right: 0.5em"></i>
-		   {{ username }}
+		   {{ request.user.username }}
 		   <div class="menu">
-		     <a class="item" style="margin-top: 0.5em; margin-bottom: 0.5em" href="/account/sign_out">
+		     <a class="item" style="margin-top: 0.5em; margin-bottom: 0.5em" href="{% url 'accounts:sign_out' %}">
                <i class="sign out big icon"></i> Sign out
              </a>
 		   </div>
@@ -139,7 +142,7 @@
       </div>
 
 	  <div class="ui tab active" data-tab="first">
-          <form class="ui fluid action input" action="/api/add_torrent/" method="post">{% csrf_token %}
+          <form class="ui fluid action input" action="{% url 'torrent:add' %}" method="post">{% csrf_token %}
             <input type="text" id="torrent_url" name="torrent_url" placeholder="Paste here URL to torrent file or magnet link.">
             <button type="submit" class="ui teal button">
             Add torrent
@@ -150,7 +153,7 @@
 	  <div class="ui tab" data-tab="second">
       <div class="ui secondary raised center aligned segment" id="dropbox">
       <br>
-        <form enctype="multipart/form-data" action="/api/add_torrent/" method="post" style="margin-bottom:1em">{% csrf_token %}
+        <form enctype="multipart/form-data" action="{% url 'torrent:add' %}" method="post" style="margin-bottom:1em">{% csrf_token %}
           <div class="icon-upload" style="text-align: center">
             <label for="torrent_file">
               <i class="teal cloud upload link huge icon" type="file"></i>

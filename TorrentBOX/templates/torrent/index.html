@@ -5,6 +5,24 @@
   <div class="ui segment">
     <i class="teal refresh icon"></i> DOWNLOADING TORRENTS
   </div>
+
+  {% for torrent in torrents %}
+  <div class="ui segment">
+  <!-- TODO: Listing progress of torrents -->
+  </div>
+  
+  {% empty %}
+  <div class="ui segment">
+    <div class="ui secondary raised center aligned segment">
+     <br><br>
+     <i class="disabled refresh massive icon"></i>
+     <h3>No active downloads</h3>
+     <p>There are no torrents downloading at the moment.</p>
+     <p>Add torrent to download!</p>
+     <br><br>
+    </div>
+  </div>
+  {% endfor %}
 </div>
 
 {% endblock %}
