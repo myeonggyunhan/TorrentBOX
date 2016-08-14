@@ -14,6 +14,9 @@ class TorrentQuerySet(models.QuerySet):
             downloaded_size = exist_torrent.downloaded_size,
             owner = new_owner
         )
+  
+    def get_actives(self, owner):
+        return self.filter(status="downloading") | self.filter(status="finished")
 
 
 class Torrent(models.Model):
