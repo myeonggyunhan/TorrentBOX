@@ -44,9 +44,10 @@ def download(request):
     return render(request, 'torrent/index.html')
 
 @login_required
-def delete(request):
-    # TODO: Delete torrent entry (file is still exist in the server)
-    return render(request, 'torrent/index.html')
+def delete(request, torrent_id):
+    # Delete torrent entry but not delete real file in the server
+    Torrent.objects.get(id=torrent_id, owner=request.user).delete()
+    return redirect('torrent:index')
 
 @login_required
 def add(request):

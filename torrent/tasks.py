@@ -32,6 +32,8 @@ def download_torrent(torrent_id, torrent_data):
         torrent.save()
         time.sleep(2)
 
+    # TODO: If downloaded file is directory, then zip
+
     # Download is done
     torrent.peers = 0
     torrent.progress = 100

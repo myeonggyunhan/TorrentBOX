@@ -74,7 +74,7 @@ setInterval(function(){
         {{ torrent.name }}
         </div>
         <div class="two wide column">
-          <a href="/download/delete/{{ torrent.id }}">
+          <a href="{% url 'torrent:delete' torrent_id=torrent.id %}">
             <i class="large link black remove icon" style="float: right"></i>
           </a>
         </div>
