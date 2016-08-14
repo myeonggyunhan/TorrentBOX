@@ -1,5 +1,64 @@
 {% extends 'base.html' %}
 {% block content %}
+{% load torrent_tags %}
+
+<script type="text/javascript">
+
+function setTextContents($elem, text) {
+    $elem.get(0).lastChild.nodeValue = text;
+}
+
+function updateStatus(id, data) {
+    $(id).attr('data-percent', data.progress);
+    $(id + '_progress').text(data.progress+'%');
+    $(id + '_bar').innerWidth(data.progress+'%');
+
+    const drateText = data.download_rate + ' (peers: ' + data.peers + ')';
+    const drateElem = $(id + '_drate');
+    setTextContents(drateElem, drateText);
+
+    const dsizeText = data.downloaded_size + ' / ' + data.size;
+    const dsizeElem = $(id + '_dsize');
+    setTextContents(dsizeElem, dsizeText);
+
+    const rtimeText = 'Remaining time: ' + data.rtime;
+    const rtimeElem = $(id + '_rtime');
+    setTextContents(rtimeElem, rtimeText);
+}
+
+setInterval(function(){
+  $.ajax({
+    url:"{% url 'torrent:status' %}",
+    dataType:'json',
+    success:function(data){
+      for(var i in data){
+        const id = '#' + data[i].id;
+
+        if (data[i].status === 'finished' && Number($(id).attr('data-percent')) < 100) {
+            updateStatus(id, data[i]);
+            const downloadButton = '<a href="#" class="ui tiny basic right floated button">' +
+                                   '<i class="arrow down large black icon"></i>Download</a>'; 
+            $(id).parent().append(downloadButton);
+        }
+ 
+        // lst = $("#torrent-segments").children(); // lst[0] is not target
+        // lst[5].children[1].id
+        // lst.length
+        // if (lst.length > 1) { ... }
+
+        if (data[i].status === 'downloading') {
+            // FIXME: Not efficient. Add new entry to the list
+            if (!$(id).hasClass('progress')) {
+                location.reload(true);
+            }
+
+            updateStatus(id, data[i]);
+        }
+      }
+    }
+  })
+},3000)
+</script>
 
 <div class="ui segments" id="torrent-segments">
   <div class="ui segment">
@@ -8,7 +67,44 @@
 
   {% for torrent in torrents %}
   <div class="ui segment">
-  <!-- TODO: Listing progress of torrents -->
+    <h4 class="ui header">
+      <div class="ui grid" style="margin-bottom: -22px;">
+        <!-- TODO: ellipsis support -->
+        <div class="fourteen wide column" style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
+        {{ torrent.name }}
+        </div>
+        <div class="two wide column">
+          <a href="/download/delete/{{ torrent.id }}">
+            <i class="large link black remove icon" style="float: right"></i>
+          </a>
+        </div>
+      </div>
+    </h4>
+
+    <div id="{{ torrent.id }}" class="ui indicating progress active" data-percent="{{ torrent.progress }}" style="margin-bottom:10px;">
+      <div id="{{ torrent.id }}_bar" class="bar" style="transition-duration: 300ms; width: {{ torrent.progress }}%">
+        <div id="{{ torrent.id }}_progress" class="progress">{{ torrent.progress }}%</div>
+      </div>
+    </div>
+
+    <div id="{{ torrent.id }}_status" class="ui horizontal list">
+      <div id="{{ torrent.id }}_drate" class="item">
+        <i class="arrow circle down icon"></i>{{ torrent.download_rate|speedformat }} (peers: {{ torrent.peers }})
+      </div>
+      <div id="{{ torrent.id }}_dsize" class="item">
+        <i class="download icon"></i>
+         {{ torrent.downloaded_size|filesize }} / {{ torrent.size|filesize }}
+      </div>
+      <div id="{{ torrent.id }}_rtime" class="item">
+        <i class="wait icon"></i> Remaining time: {% get_remain_time torrent.size torrent.downloaded_size torrent.download_rate %}
+      </div>
+    </div>
+
+    {% if torrent.status == 'finished' %}
+    <a href="#" class="ui tiny basic right floated button">
+      <i class="arrow down large black icon"></i>Download
+    </a>
+    {% endif %}
   </div>
   
   {% empty %}

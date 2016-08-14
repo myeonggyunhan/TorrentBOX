@@ -63,7 +63,7 @@
             var uri = "{% url 'torrent:add' %}";
             var xhr = new XMLHttpRequest();
             var fd = new FormData();
-			var csrftoken = getCookie('csrftoken');
+            var csrftoken = getCookie('csrftoken');
             fd.append("csrfmiddlewaretoken", csrftoken)      
             fd.append('torrent_file', file);
             xhr.open("POST", uri, true);

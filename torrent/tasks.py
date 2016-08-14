@@ -15,6 +15,7 @@ def download_torrent(torrent_id, torrent_data):
     h = ses.add_torrent({'ti': info, 'save_path': settings.TORRENT_STORAGE})
 
     while (not h.is_seed()):
+        # XXX: Performance issue?... access database every loop
         torrent = Torrent.objects.get(id = torrent_id)
 
         # Torrent is canceled by user during download
