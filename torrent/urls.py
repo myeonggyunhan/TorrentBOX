@@ -7,5 +7,6 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^add/$', views.add, name='add'),
     url(r'^delete/(?P<torrent_id>\d+)/$', views.delete, name='delete'),
+    url(r'^download/(?P<torrent_id>\d+)/$', views.download, name='download'),
     url(r'^status/$', views.status, name='status'),
 ]

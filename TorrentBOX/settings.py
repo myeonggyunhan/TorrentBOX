@@ -134,3 +134,8 @@ LOGOUT_URL = '/accounts/sign_out/'
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [str(PROJECT_PACKAGE.joinpath('static'))]
+
+#SENDFILE_BACKEND = 'sendfile.backends.nginx'
+SENDFILE_BACKEND = 'sendfile.backends.development'
+SENDFILE_ROOT = TORRENT_STORAGE
+SENDFILE_URL = '/storage'

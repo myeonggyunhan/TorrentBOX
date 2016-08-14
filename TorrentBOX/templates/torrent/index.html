@@ -33,11 +33,14 @@ setInterval(function(){
     success:function(data){
       for(var i in data){
         const id = '#' + data[i].id;
+        const downloadURL = '/torrent/download/';
 
         if (data[i].status === 'finished' && Number($(id).attr('data-percent')) < 100) {
             updateStatus(id, data[i]);
-            const downloadButton = '<a href="#" class="ui tiny basic right floated button">' +
+            const downloadButton = '<a href="' + downloadURL + data[i].id + '/' + 
+                                   '" class="ui tiny basic right floated button">' +
                                    '<i class="arrow down large black icon"></i>Download</a>'; 
+            console.log(downloadButton);
             $(id).parent().append(downloadButton);
         }
  
@@ -101,7 +104,7 @@ setInterval(function(){
     </div>
 
     {% if torrent.status == 'finished' %}
-    <a href="#" class="ui tiny basic right floated button">
+    <a href="{% url 'torrent:download' torrent_id=torrent.id %}" class="ui tiny basic right floated button">
       <i class="arrow down large black icon"></i>Download
     </a>
     {% endif %}

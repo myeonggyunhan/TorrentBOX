@@ -2,13 +2,17 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import JsonResponse
+from django.conf import settings
 
+from sendfile import sendfile
 import libtorrent as lt
 import requests
 
 from .models import Torrent
 from .tasks import download_torrent
 from .utils import filesize, get_remain_time
+
+import os
 
 @login_required
 def index(request):
@@ -39,9 +43,10 @@ def status(request):
     return JsonResponse(status_list, safe=False)
 
 @login_required
-def download(request):
-    # TODO: Send downloaded file to user
-    return render(request, 'torrent/index.html')
+def download(request, torrent_id):
+    torrent = Torrent.objects.get(id=torrent_id, owner=request.user)
+    filepath = os.path.join(settings.SENDFILE_ROOT, torrent.name)
+    return sendfile(request, filepath, attachment=True, attachment_filename=torrent.name)
 
 @login_required
 def delete(request, torrent_id):
