@@ -54,10 +54,12 @@ def add(request):
     if 'torrent_file' in request.FILES:
         torrent_file = request.FILES['torrent_file']
         torrent_data = torrent_file.read()
+
     elif 'torrent_url' in request.POST:
         url = request.POST['torrent_url']
         response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
         torrent_data = response.content
+
     else:
         return redirect('torrent:index')
 
@@ -72,7 +74,7 @@ def add(request):
     # Finished torrent file is already exist in the server
     exist_torrent = Torrent.objects.filter(hash=torrent_hash, status='finished').first()
     if exist_torrent:
-        Torrent.objects.copy_and_create(request.user)
+        Torrent.objects.copy_and_create(exist_torrent, request.user)
         return redirect('torrent:index')
 
     new_torrent = Torrent.objects.create(
