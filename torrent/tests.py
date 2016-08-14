@@ -35,7 +35,7 @@ class TorrentTestCase(TestCase):
 
     def test_manager_copy_and_create(self):
         """
-        Make sure that the Entry manager's `copy_and_create` method works
+        Make sure that the Torrent manager's `copy_and_create` method works
         """
         torrent_name = "Test torrent 2"
         create_dummy_torrent(torrent_name, "finished", self.user1) 
