@@ -11,7 +11,7 @@ def sign_in(request):
     auth_form = TorrentBoxAuthForm(data = request.POST or None)
     create_form = TorrentBoxCreateForm(data = request.POST or None)
     template = 'accounts/sign_in.html'
-    next_url = request.POST.get("next", "/")
+    next_url = request.POST.get('next', '/')
 
     context = {
         'signin_form': auth_form,
@@ -33,7 +33,7 @@ def sign_up(request):
     auth_form = TorrentBoxAuthForm(data = request.POST or None)
     create_form = TorrentBoxCreateForm(data = request.POST or None)
     template = 'accounts/sign_in.html'
-    next_url = request.POST.get("next", "/")
+    next_url = request.POST.get('next', '/')
 
     context = {
         'signin_form': auth_form,
@@ -59,4 +59,4 @@ def sign_up(request):
 @login_required
 def sign_out(request):
     logout(request)
-    return redirect("accounts:sign_in")
+    return redirect('accounts:sign_in')

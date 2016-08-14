@@ -27,8 +27,8 @@ class TorrentTestCase(TestCase):
         self.user2 = User.objects.create(username='user-2')
 
     def test_torrent_create_and_get(self):
-        torrent_name = "Test torrent 1"
-        create_dummy_torrent(torrent_name, "queued", self.user1) 
+        torrent_name = 'Test torrent 1'
+        create_dummy_torrent(torrent_name, 'queued', self.user1) 
         torrent = Torrent.objects.get(owner = self.user1)
 
         self.assertEqual(torrent.hash, get_sha1(torrent_name))
@@ -37,12 +37,12 @@ class TorrentTestCase(TestCase):
         """
         Make sure that the Torrent manager's `copy_and_create` method works
         """
-        torrent_name = "Test torrent 2"
-        create_dummy_torrent(torrent_name, "finished", self.user1) 
+        torrent_name = 'Test torrent 2'
+        create_dummy_torrent(torrent_name, 'finished', self.user1) 
 
         exist_torrent = Torrent.objects.filter(
             hash = get_sha1(torrent_name),
-            status = "finished"
+            status = 'finished'
         ).first()
 
         # Copy exist torrent and create new one for user2

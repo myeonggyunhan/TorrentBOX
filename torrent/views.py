@@ -13,13 +13,10 @@ from .utils import filesize, get_remain_time
 @login_required
 def index(request):
     torrents = Torrent.objects.get_actives(request.user)
-    return render(request, "torrent/index.html", {"torrents": torrents})
+    return render(request, 'torrent/index.html', {'torrents': torrents})
 
 @login_required
 def status(request):
-    if not request.is_ajax():
-        redirect('torrent:index')
-
     status_list = list()
     torrents = Torrent.objects.get_actives(request.user)
 
@@ -73,7 +70,7 @@ def add(request):
         return redirect('torrent:index')
 
     # Finished torrent file is already exist in the server
-    exist_torrent = Torrent.objects.filter(hash=torrent_hash, status="finished").first()
+    exist_torrent = Torrent.objects.filter(hash=torrent_hash, status='finished').first()
     if exist_torrent:
         Torrent.objects.copy_and_create(request.user)
         return redirect('torrent:index')
@@ -83,7 +80,7 @@ def add(request):
         hash = torrent_hash,
         size = int(info.total_size()),
         peers = 0,
-        status = "queued",
+        status = 'queued',
         progress = 0,
         download_rate = 0,
         downloaded_size = 0,
