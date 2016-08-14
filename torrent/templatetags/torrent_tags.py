@@ -23,7 +23,7 @@ def speedformat(value):
 @register.simple_tag
 def get_remain_time(total, downloaded, download_rate):
     if download_rate == 0:
-        rtime = "0 초"
+        rtime = "0 sec"
         return rtime
 
     data = (total - downloaded) / download_rate
