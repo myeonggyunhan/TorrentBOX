@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import JsonResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 
 import libtorrent as lt
 from sendfile import sendfile
@@ -45,14 +45,36 @@ def status(request):
 
 @login_required
 def download(request, torrent_id):
-    torrent = Torrent.objects.get(id=torrent_id, owner=request.user)
-    filepath = os.path.join(settings.SENDFILE_ROOT, torrent.name)
-    return sendfile(request, filepath, attachment=True, attachment_filename=torrent.name)
+    torrent = get_object_or_404(Torrent, id=torrent_id, owner=request.user)
 
+    # User can download only finished file
+    if torrent.status == "finished":
+        filepath = os.path.join(settings.SENDFILE_ROOT, torrent.name)
+        return sendfile(request, filepath, attachment=True, attachment_filename=torrent.name)
+
+    else:
+        messages.error(request, "You can't download file until finished")
+        return redirect('torrent:index')
+   
 @login_required
 def delete(request, torrent_id):
+    torrent = get_object_or_404(Torrent, id=torrent_id, owner=request.user)
+
     # Delete torrent entry but not delete real file in the server
-    Torrent.objects.get(id=torrent_id, owner=request.user).delete()
+    if torrent.status == 'finished':
+        torrent.delete()
+    
+    # Torrent entry will be deleted by celery task
+    elif torrent.status == 'downloading':
+        torrent.status = 'terminated'
+        torrent.save()
+
+    elif torrent.status == 'queued':
+        torrent.status = 'terminated'
+        torrent.save()
+        # XXX: Torrent is in the ready queue.
+        # TODO: Add eviction functionality.
+
     return redirect('torrent:index')
 
 @login_required
