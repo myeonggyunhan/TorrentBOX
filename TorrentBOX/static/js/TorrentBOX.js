@@ -116,14 +116,8 @@ setInterval(function(){
             const downloadButton = '<a href="' + downloadURL + data[i].id + '/' +
                                    '" class="ui tiny basic right floated button">' +
                                    '<i class="arrow down large black icon"></i>Download</a>';
-            console.log(downloadButton);
             $(id).parent().append(downloadButton);
         }
-
-        // lst = $("#torrent-segments").children(); // lst[0] is not target
-        // lst[5].children[1].id
-        // lst.length
-        // if (lst.length > 1) { ... }
 
         if (data[i].status === 'downloading' | data[i].status === 'finished') {
             // FIXME: Not efficient. Add new entry to the list
