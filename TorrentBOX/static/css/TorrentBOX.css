@@ -10,3 +10,6 @@ body {
 .icon-upload > input {
     display: none;
 }
+.right.icon {
+    float: right;
+}
