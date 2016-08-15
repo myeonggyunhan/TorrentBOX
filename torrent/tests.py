@@ -1,8 +1,10 @@
-from django.contrib.auth.models import User
-from django.test import TestCase
 from hashlib import sha1
 
+from django.contrib.auth.models import User
+from django.test import TestCase
+
 from .models import Torrent
+
 
 def get_sha1(name):
     return sha1(name.encode('utf-8')).hexdigest()
@@ -50,4 +52,3 @@ class TorrentTestCase(TestCase):
          
         self.assertEqual(exist_torrent.hash, new_torrent.hash)
         self.assertNotEqual(exist_torrent.owner, new_torrent.owner)
-

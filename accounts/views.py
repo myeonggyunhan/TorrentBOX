@@ -1,15 +1,15 @@
-from django.shortcuts import render
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 
-from .forms import TorrentBoxCreateForm, TorrentBoxAuthForm
+from .forms import TorrentBoxAuthForm, TorrentBoxCreateForm
+
 
 def sign_in(request):
-    auth_form = TorrentBoxAuthForm(data = request.POST or None)
-    create_form = TorrentBoxCreateForm(data = request.POST or None)
+    auth_form = TorrentBoxAuthForm(data=request.POST or None)
+    create_form = TorrentBoxCreateForm(data=request.POST or None)
     template = 'accounts/sign_in.html'
     next_url = request.POST.get('next', '/')
 
@@ -30,8 +30,8 @@ def sign_in(request):
     return render(request, template, context)
 
 def sign_up(request):
-    auth_form = TorrentBoxAuthForm(data = request.POST or None)
-    create_form = TorrentBoxCreateForm(data = request.POST or None)
+    auth_form = TorrentBoxAuthForm(data=request.POST or None)
+    create_form = TorrentBoxCreateForm(data=request.POST or None)
     template = 'accounts/sign_in.html'
     next_url = request.POST.get('next', '/')
 

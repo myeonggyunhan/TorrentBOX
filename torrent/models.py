@@ -1,5 +1,6 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
+
 
 class TorrentQuerySet(models.QuerySet):
     def copy_and_create(self, exist_torrent, new_owner):
@@ -40,4 +41,3 @@ class Torrent(models.Model):
 
     def __str__(self):
         return self.name
-

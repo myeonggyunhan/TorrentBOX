@@ -1,10 +1,12 @@
+import time
+
 from celery.decorators import task
 from django.conf import settings
 
+import libtorrent as lt
+
 from .models import Torrent
 
-import libtorrent as lt
-import time
 
 @task(name='download_torrent')
 def download_torrent(torrent_id, torrent_data):

@@ -1,14 +1,16 @@
 import os
-import stat
 import re
+import stat
+
+from django.core.files.base import File
+from django.http import HttpResponse, HttpResponseNotModified
+from django.utils.http import http_date
+
 try:
     from email.utils import parsedate_tz, mktime_tz
 except ImportError:
     from email.Utils import parsedate_tz, mktime_tz
 
-from django.core.files.base import File
-from django.http import HttpResponse, HttpResponseNotModified
-from django.utils.http import http_date
 
 
 def sendfile(request, filename, **kwargs):

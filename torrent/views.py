@@ -1,18 +1,19 @@
-from django.shortcuts import render, redirect
+import os
+
+import requests
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import JsonResponse
-from django.conf import settings
+from django.shortcuts import redirect, render
 
-from sendfile import sendfile
 import libtorrent as lt
-import requests
+from sendfile import sendfile
 
 from .models import Torrent
 from .tasks import download_torrent
 from .utils import filesize, get_remain_time
 
-import os
 
 @login_required
 def index(request):
@@ -97,4 +98,3 @@ def add(request):
 
     download_torrent.delay(new_torrent.id, torrent_data)
     return redirect('torrent:index')
-
