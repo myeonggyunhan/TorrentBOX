@@ -1,3 +1,5 @@
+import os
+import shutil
 import time
 
 from celery.decorators import task
@@ -6,6 +8,7 @@ from django.conf import settings
 import libtorrent as lt
 
 from .models import Torrent
+from .utils import compress_data
 
 
 @task(name='download_torrent')
@@ -39,14 +42,29 @@ def download_torrent(torrent_id, torrent_data):
         torrent.save()
         time.sleep(2)
 
-    # TODO: If downloaded file is directory, then zip (change status to "compressing")
-
     # Download is done
     torrent.peers = 0
     torrent.progress = 100
     torrent.download_rate = 0
     torrent.downloaded_size = torrent.size
-    torrent.status = 'finished'
-    torrent.save()
 
+    # If downloaded file is directory, then compress it
+    filepath = os.path.join(settings.TORRENT_STORAGE, torrent.name)
+    if os.path.isdir(filepath):
+        torrent.status = 'compressing'
+        torrent.save()
+
+        # Compress directory to zipfile and remove original file
+        # FIXME: Currently compress data to zip format. Is it OK?
+        compress_data(filepath)
+        shutil.rmtree(filepath)
+
+        torrent.name = torrent.name + '.zip'
+        torrent.status = 'finished'
+        torrent.save()
+
+    else:
+        torrent.status = 'finished'
+        torrent.save()
+    
     return

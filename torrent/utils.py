@@ -1,3 +1,18 @@
+import os
+import zipfile
+
+
+def compress_data(filepath):
+    abspath = os.path.abspath(filepath)
+    if not os.path.isdir(abspath):
+        return
+
+    ziph = zipfile.ZipFile(abspath + '.zip', 'w', allowZip64=True)
+    for root, dirs, files in os.walk(abspath):
+        for _file in files:
+            ziph.write(os.path.join(root, _file))
+    ziph.close()
+
 def filesize(value, suffix='B'):
     for unit in ['','Ki','Mi','Gi','Ti','Pi','Ei','Zi']:
         if abs(value) < 1024.0:

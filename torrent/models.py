@@ -19,6 +19,7 @@ class TorrentQuerySet(models.QuerySet):
     def get_actives(self, owner):
         active_torrents = self.filter(status='downloading', owner=owner) 
         active_torrents |= self.filter(status='finished', owner=owner)
+        active_torrents |= self.filter(status='compressing', owner=owner)
         return active_torrents
 
 class Torrent(models.Model):
