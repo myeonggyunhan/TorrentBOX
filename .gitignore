@@ -1,5 +1,8 @@
 # Created by https://www.gitignore.io/api/django,pycharm,python
 
+### TorrentBOX ###
+storage
+
 ### Django ###
 *.log
 *.pot
