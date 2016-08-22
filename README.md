@@ -5,7 +5,7 @@ Multi-user based torrent download and sharing Django application
 ![Demo](https://cloud.githubusercontent.com/assets/8179234/17862249/670f204e-68cf-11e6-81e8-feb0214786dc.png)
 
 ## Prerequisites
-* [libtorrent](http://www.libtorrent.org/) - [[Install guide](https://github.com/L34p/TorrentBOX/wiki/Installation-guide-for-libtorrent)]
+* [libtorrent](http://www.libtorrent.org/) - [[Install guide](https://github.com/L34p/TorrentBOX/wiki/Installation-guide-for-libtorrent-1.1.0)]
 * [RabbitMQ](https://www.rabbitmq.com/)    - [[Install guide](https://github.com/L34p/TorrentBOX/wiki/Installation-guide-for-RabbitMQ)]
 
 ## Installation
