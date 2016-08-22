@@ -83,7 +83,7 @@ def delete(request, torrent_id):
 
 @login_required
 def add(request):
-    # TODO: URL validation, Support magnet URI
+    # TODO: Support magnet URI
     if 'torrent_file' in request.FILES:
         torrent_file = request.FILES['torrent_file']
         torrent_data = torrent_file.read()
