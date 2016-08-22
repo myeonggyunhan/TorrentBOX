@@ -16,6 +16,11 @@ def download_torrent(torrent_id, torrent_data):
     info = lt.torrent_info(e)
     h = ses.add_torrent({'ti': info, 'save_path': settings.TORRENT_STORAGE})
 
+    # Torrent is not valid
+    if not h.is_valid():
+        #TODO: Send error message to user
+        return
+
     while (not h.is_seed()):
         # XXX: Performance issue?... access database every loop
         torrent = Torrent.objects.get(id = torrent_id)
