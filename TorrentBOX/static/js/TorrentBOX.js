@@ -2,6 +2,10 @@ $(document).ready(function() {
     $('.ui.menu a.item').tab();
 })
 
+function removeMessage() {
+    $('#err-msg').remove()
+}
+
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie != '') {

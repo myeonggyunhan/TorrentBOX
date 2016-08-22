@@ -1,0 +1,8 @@
+{% if messages %}
+<div id="err-msg" class="ui negative message">
+  <i class="close right icon" onclick="removeMessage()"></i></a>
+  {% for message in messages %}
+    {{ message }}
+  {% endfor %}
+</div>
+{% endif %}

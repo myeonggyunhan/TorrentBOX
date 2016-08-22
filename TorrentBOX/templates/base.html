@@ -24,6 +24,7 @@
   <link rel="stylesheet" type="text/css" href="{% static 'css/semantic-ui/progress.min.css' %}">
   <link rel="stylesheet" type="text/css" href="{% static 'css/semantic-ui/grid.min.css' %}">
   <link rel="stylesheet" type="text/css" href="{% static 'css/semantic-ui/list.min.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/semantic-ui/message.min.css' %}">
 
   <!-- TorrentBOX Custom CSS -->
   <link rel="stylesheet" type="text/css" href="{% static 'css/TorrentBOX.css' %}">
@@ -48,6 +49,7 @@
   </div>
 
   <div class="ui main container">
+    {% include "message.html" %}
     <div class="ui segment">
       <div class="ui secondary pointing menu">
         <a class="active item" data-tab="first">Add torrent link</a>
@@ -56,7 +58,7 @@
 
       <div class="ui tab active" data-tab="first">
         <form class="ui fluid action input" action="{% url 'torrent:add' %}" method="post">{% csrf_token %}
-          <input type="text" id="torrent_url" name="torrent_url" placeholder="Paste here URL to torrent file or magnet link.">
+          <input type="text" id="torrent_url" name="torrent_url" placeholder="Paste here URL to torrent file">
           <button type="submit" class="ui teal button">
           Add torrent
           </button>

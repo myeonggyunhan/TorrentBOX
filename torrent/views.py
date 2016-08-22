@@ -4,7 +4,9 @@ import requests
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
+from django.core.validators import URLValidator
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -51,6 +53,7 @@ def download(request, torrent_id):
     # User can download only finished file
     if torrent.status == "finished":
         filepath = os.path.join(settings.SENDFILE_ROOT, torrent.name)
+        print(torrent.name)
         return sendfile(request, filepath, attachment=True, attachment_filename=torrent.name)
 
     else:
@@ -87,6 +90,12 @@ def add(request):
 
     elif 'torrent_url' in request.POST:
         url = request.POST['torrent_url']
+        try:
+            URLValidator(message='URL is not valid, please enter a valid URL')(url)
+        except ValidationError as e:
+            messages.error(request, e.message)
+            return redirect('torrent:index')
+
         response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
         torrent_data = response.content
 
