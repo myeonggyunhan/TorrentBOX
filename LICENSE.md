@@ -26,15 +26,15 @@ SOFTWARE.
 1) License Notice for django-sendfile
 -------------------------------------
 
-https://github.com/johnsensible/django-sendfile/blob/master/LICENSE
+https://github.com/johnsensible/django-sendfile/blob/master/LICENSE  
 
-Copyright (c) 2011, Sensible Development.
-All rights reserved.
+Copyright (c) 2011, Sensible Development.  
+All rights reserved.  
  
 Redistribution and use in source and binary forms, with or without modification,
-are permitted provided that the following conditions are met:
+are permitted provided that the following conditions are met:  
  
-    1. Redistributions of source code must retain the above copyright notice, 
+    1. Redistributions of source code must retain the above copyright notice,
        this list of conditions and the following disclaimer.
     
     2. Redistributions in binary form must reproduce the above copyright 
