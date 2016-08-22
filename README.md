@@ -2,7 +2,7 @@
 Multi-user based torrent download and sharing Django application
 
 ## Screenshot
-![Demo](https://cloud.githubusercontent.com/assets/8179234/17861214/1c639a92-68cb-11e6-8d12-642c2ce0f1c3.png)
+![Demo](https://cloud.githubusercontent.com/assets/8179234/17862249/670f204e-68cf-11e6-81e8-feb0214786dc.png)
 
 ## Prerequisites
 * [libtorrent](http://www.libtorrent.org/) - [[Install guide](https://github.com/L34p/TorrentBOX/wiki/Installation-guide-for-libtorrent)]
@@ -29,4 +29,4 @@ $ python3 manage.py celeryd --loglevel info --concurrency 5
 **NOTE:** This is only for test. If you want to deploy it, use Django with other web servers like [Apache](http://www.apache.org/) or [Nginx](http://nginx.org/).
 
 ## License
-[MIT](LICENSE)
+[MIT](LICENSE.md)
