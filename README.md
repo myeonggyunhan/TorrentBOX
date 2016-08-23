@@ -1,5 +1,5 @@
 # TorrentBOX
-Multi-user based torrent download and sharing Django application
+Multi-user based torrent download and sharing application written in Django  
 
 ## Screenshot
 ![Demo](https://cloud.githubusercontent.com/assets/8179234/17862249/670f204e-68cf-11e6-81e8-feb0214786dc.png)
