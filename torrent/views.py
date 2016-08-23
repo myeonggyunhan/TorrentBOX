@@ -53,7 +53,6 @@ def download(request, torrent_id):
     # User can download only finished file
     if torrent.status == "finished":
         filepath = os.path.join(settings.SENDFILE_ROOT, torrent.name)
-        print(torrent.name)
         return sendfile(request, filepath, attachment=True, attachment_filename=torrent.name)
 
     else:
